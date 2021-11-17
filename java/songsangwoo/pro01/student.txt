@@ -1,0 +1,10 @@
+1 David 80
+2 Andrew 92
+3 Cindy 77
+4 Paul 82
+5 Tom 73
+6 Alice 85
+7 Elizabeth 79
+8 Daniel 100
+9 Sarah 81
+10 Jennifer 95

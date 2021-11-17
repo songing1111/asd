@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="Person2"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="Person"/>
+			<item value="Student"/>
+			<item value="Car"/>
+			<item value="Parent22"/>
+			<item value="Parent"/>
+			<item value="Child"/>
+			<item value="Circle"/>
+			<item value="parent"/>
+			<item value="Student43"/>
+			<item value="Book"/>
+			<item value="Point"/>
+			<item value="Data"/>
+			<item value="Data1"/>
+			<item value="Book2"/>
+			<item value="Data2"/>
+		</list>
+		<list key="replacehistory">
+			<item value="Person2"/>
+			<item value="Person1"/>
+			<item value="Student5"/>
+			<item value="Car1"/>
+			<item value="Parent33"/>
+			<item value="Parent22"/>
+			<item value="Child22"/>
+			<item value="Circle1"/>
+			<item value="Child3"/>
+			<item value="parent3"/>
+			<item value="parent2"/>
+			<item value="Child2"/>
+			<item value="Child1"/>
+			<item value="parent1"/>
+			<item value="Student4"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="824"/>
+		<item key="DIALOG_Y_ORIGIN" value="268"/>
+		<item key="DIALOG_WIDTH" value="288"/>
+		<item key="DIALOG_HEIGHT" value="391"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+</section>

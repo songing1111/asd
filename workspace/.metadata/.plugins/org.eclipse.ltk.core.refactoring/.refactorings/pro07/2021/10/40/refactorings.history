@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 3 elements to &apos;pro08/src/main/java/sec04.ex03&apos;&#x0D;&#x0A;- Original project: &apos;pro07&apos;&#x0D;&#x0A;- Destination element: &apos;pro08/src/main/java/sec04.ex03&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     sec01.ex01.MemberDAO.java&#x0D;&#x0A;     sec01.ex01.MemberServlet.java&#x0D;&#x0A;     sec01.ex01.MemberVO.java" description="Copy compilation units" destination="=pro08/src\/main\/java&lt;sec04.ex03" element1="/src\/main\/java&lt;sec01.ex01{MemberDAO.java" element2="/src\/main\/java&lt;sec01.ex01{MemberServlet.java" element3="/src\/main\/java&lt;sec01.ex01{MemberVO.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1633052583654" units="3" version="1.0"/>
+</session>
