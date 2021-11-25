@@ -6,12 +6,11 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
-<!DOCTYPE html>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+
 <html>
 <head>
-<link href="C:/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
 <style>
-
 footer{
   background-color:red;
   position:relative;
@@ -50,8 +49,6 @@ footer div .sc a{
   padding:40px 20px 0 0;
 }
 </style>
-<meta charset="UTF-8">
-<title>footer</title>
 </head>
 <body>
 	<footer>
