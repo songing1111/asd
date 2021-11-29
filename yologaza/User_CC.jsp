@@ -28,12 +28,11 @@ ul {
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
-    padding-inline-start: 40px;
 }
 
 .sub_wrap .align_rt {
     float: right;
-    width: 660px;
+    width: 750px;
     margin-right: 31px;
   margin-top:70px;
   margin-bottom:100px;
@@ -43,7 +42,6 @@ ul {
     display: block;
     float: left;
     width: 238px;
-    padding-left: 31px;
   padding-top:32px;
 }
 
@@ -67,8 +65,8 @@ ul {
 
 .sub_top h1{
   display:block;
-  margin-left:100px;
   color:#fff;
+  text-align:left;
   
 }
 
@@ -128,6 +126,7 @@ ul {
 .tab_each {
     clear: both;
     border-top: 1px solid black;
+    text-align:left;
 }
 
 div {
@@ -157,6 +156,11 @@ p {
   color:black;
 }
 
+.sub_wrap nav{
+	padding-right:20px;
+	text-align:left;
+}
+
 .sub_wrap nav ul li a.active{
   font-size:20px;
   color:rgb(112,173,71);
@@ -184,6 +188,10 @@ p {
 
 .sub_wrap nav ul li {
     margin-bottom: 26px;
+}
+
+.tab{
+	text-align:left;
 }
 
 .tab span.tab_btn {
@@ -236,13 +244,13 @@ p {
         <nav>
           <ul>
             <li>
-              <a href="#" class="active">공지사항</a>
+              <a href="${contextPath}/member/User_CCForm.do" class="active">공지사항</a>
             </li>
             <li>
-              <a href="#">자주묻는 질문</a>
+              <a href="${contextPath}/member/Question1Form.do">자주묻는 질문</a>
             </li>
             <li>
-              <a href="#">1:1문의</a>
+              <a href="${contextPath}/member/Question2Form.do">1:1문의</a>
             </li>
           </ul>
         </nav>

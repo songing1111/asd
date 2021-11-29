@@ -10,6 +10,7 @@
 
 <html>
 <head>
+<script src="${contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <style>
 a{text-decoration:none}
 ul,ol,li{list-style:none}
@@ -32,19 +33,22 @@ ul {
 
 .sub_wrap .align_rt {
     float: right;
-    width: 680px;
-    margin-right: 100px;
-  margin-top:10px;
+    width: 750px;
+    margin-right: 31px;
+  margin-top:20px;
   margin-bottom:100px;
-  height:400px;
 }
 
 .sub_wrap nav {
     display: block;
     float: left;
     width: 238px;
-    padding-left: 31px;
   padding-top:32px;
+}
+
+.wrap{
+  width:100%;
+  background:#fff;
 }
 
 .sub_top_wrap{
@@ -62,8 +66,14 @@ ul {
 
 .sub_top h1{
   display:block;
-  margin-left:40px;
   color:#fff;
+  text-align:left;
+  
+}
+
+
+.content{
+  overflow:hidden;
 }
 
 .sub_wrap{
@@ -71,6 +81,7 @@ ul {
   margin:0 auto 0 auto;
   padding_top:54px;
   padding_bottom:54px;
+  background:red;
 }
 
 .show_list li .list_que span {
@@ -78,15 +89,63 @@ ul {
     color: black;
 }
 
+.show_list li{
+    display: block;
+    position: relative;
+    height: auto;
+    margin-bottom: 0;
+    padding: 0px 24px 0px 0px;
+    border-radius: 0;
+    background: #fff;
+    font-size: 18px;
+    line-height: normal;
+    cursor: pointer;
+}
+
+.show_list li .list_que p {
+    padding-bottom: 0px;
+    overflow: visible;
+    white-space: normal;
+    text-overflow: initial;
+    line-height: normal;
+    word-wrap: break-word;
+}
+
+.show_list li a p {
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: 3px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color:black;
+}
+
+.tab_each {
+    border-top: none;
+}
+
 .tab_each {
     clear: both;
     border-top: 1px solid black;
+    text-align:left;
 }
 
 div {
     display: block;
 }
 
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.show_list {
+    margin-bottom: 0;
+    padding: 0 0;
+}
 
 .sub_top{
   margin:0 auto;
@@ -96,6 +155,11 @@ div {
   display:block;
   font-size:20px;
   color:black;
+}
+
+.sub_wrap nav{
+	padding-right:20px;
+	text-align:left;
 }
 
 .sub_wrap nav ul li a.active{
@@ -109,10 +173,27 @@ div {
     visibility: visible;
 }
 
+.wrap {
+    width: 100%;
+    background: #fff;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.sub_top li {
+    margin: 21px 0 0 0px;
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: -1px;
+}
+
 .sub_wrap nav ul li {
     margin-bottom: 26px;
 }
 
+.tab{
+	text-align:left;
+}
 .tab .tab_btn ul li{
     display: inline-block;
     float: none;
@@ -189,6 +270,7 @@ div {
 }
 </style>
 <script type="text/javascript">
+$(document).ready(function () {
 	const tabList = document.querySelectorAll('.tab_btn ul li');
 const contents = document.querySelectorAll('.tab_each ul')
 let activeCont = '';// 현재 활성화 된 컨텐츠
@@ -210,8 +292,9 @@ for(var i = 0; i < tabList.length; i++){
       // 버튼 클릭시 컨텐츠 전환
       activeCont = this.getAttribute('href');
       document.querySelector(activeCont).style.display = 'block';
-    });
+    })
   }
+});
 </script>
 </head>
 <body class="pc">
@@ -225,13 +308,13 @@ for(var i = 0; i < tabList.length; i++){
         <nav>
           <ul>
             <li>
-              <a href="#">공지사항</a>
+              <a href="${contextPath}/member/User_CCForm.do">공지사항</a>
             </li>
             <li>
-              <a href="#" class="active">자주묻는 질문</a>
+              <a href="${contextPath}/member/Question1Form.do" class="active">자주묻는 질문</a>
             </li>
             <li>
-              <a href="#">1:1문의</a>
+              <a href="${contextPath}/member/Question2Form.do">1:1문의</a>
             </li>
           </ul>
         </nav>
