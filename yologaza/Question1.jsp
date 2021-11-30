@@ -12,8 +12,33 @@
 <head>
 <script src="${contextPath}/resources/js/jquery-3.6.0.min.js"></script>
 <style>
-a{text-decoration:none}
-ul,ol,li{list-style:none}
+body{
+  font-size: 14px;
+}
+.wrap.show{
+  opacity: 1;
+  visibility: visible;
+}
+
+.wrap{
+  width: 100%;
+  background:#fff;
+}
+
+
+ul,
+li {
+    list-style: none;
+}
+
+ul{
+	display:block;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
 
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
     margin: 0;
@@ -22,14 +47,6 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
     box-sizing: border-box;
 }
 
-ul {
-    display: block;
-    list-style-type: disc;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-}
 
 .sub_wrap .align_rt {
     float: right;
@@ -52,23 +69,25 @@ ul {
 }
 
 .sub_top_wrap{
-  height: 211px;
+  height: 120px;
   background:rgb(112,173,71);
 }
 
 .sub_top{
+	position:relative;
   width:1024px;
-  height:211px;
+  height:120px;
   margin:0 auto;
   border-radius:0;
-  padding-top:110px;
+	text-align:left;
 }
 
-.sub_top h1{
-  display:block;
-  color:#fff;
-  text-align:left;
-  
+.sub_top a{
+	position: absolute;
+    color: white;
+    font-weight: 500;
+    font-size: 32px;
+    bottom:20px;
 }
 
 
@@ -120,14 +139,13 @@ ul {
     color:black;
 }
 
-.tab_each {
-    border-top: none;
-}
 
 .tab_each {
     clear: both;
-    border-top: 1px solid black;
+    display:block;
+    margin-top:10px;
     text-align:left;
+    border-top:1px solid black;
 }
 
 div {
@@ -145,10 +163,6 @@ p {
 .show_list {
     margin-bottom: 0;
     padding: 0 0;
-}
-
-.sub_top{
-  margin:0 auto;
 }
 
 .sub_wrap nav ul li a{
@@ -180,13 +194,6 @@ p {
     visibility: hidden;
 }
 
-.sub_top li {
-    margin: 21px 0 0 0px;
-    font-size: 16px;
-    font-weight: normal;
-    letter-spacing: -1px;
-}
-
 .sub_wrap nav ul li {
     margin-bottom: 26px;
 }
@@ -204,7 +211,6 @@ p {
     text-align: left;
     cursor: pointer;
     padding-left:5px;
-    top:10px;
     color:black;
 }
 
@@ -301,20 +307,20 @@ for(var i = 0; i < tabList.length; i++){
     <div class="wrap show">
       <div class="sub_top_wrap">
         <div class="sub_top">
-          <h1><i class="fas fa-phone-alt fa-lg"></i> 고객센터</h1>
+          <a><i class="fas fa-phone-alt fa-lg"></i> 고객센터</a>
         </div>
       </div>
       <div id="content" class="sub_wrap">
         <nav>
           <ul>
             <li>
-              <a href="${contextPath}/member/User_CCForm.do">공지사항</a>
+              <a href="${contextPath}/CC/User_CCForm.do">공지사항</a>
             </li>
             <li>
-              <a href="${contextPath}/member/Question1Form.do" class="active">자주묻는 질문</a>
+              <a href="${contextPath}/CC/Question1Form.do" class="active">자주묻는 질문</a>
             </li>
             <li>
-              <a href="${contextPath}/member/Question2Form.do">1:1문의</a>
+              <a href="${contextPath}/CC/Question2Form.do">1:1문의</a>
             </li>
           </ul>
         </nav>
