@@ -93,9 +93,8 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
 .sub_wrap{
   width: 1024px;
   margin:0 auto 0 auto;
-  padding_top:54px;
-  padding_bottom:54px;
-  background:red;
+  padding-top:54px;
+  padding-bottom:54px;
 }
 
 .show_list li .list_que span {
@@ -269,7 +268,7 @@ p {
             <div class="tab_each">
               <ul id="notices" class="show_list">
                 <li>
-                  <a href="${contextPath}/CC/User_CCForm2.do" id="notice_tab" class="list_que">
+                  <a href="${contextPath}/CC/User_CC2Form.do" id="notice_tab" class="list_que">
                     <p>[공지]11월 이벤트</p>
                     <span>
                       2021.11.10
@@ -277,7 +276,7 @@ p {
                   </a>
                 </li>
                 <li>
-                  <a href="${contextPath}/CC/User_CCForm2.do" id="notice_tab" class="list_que">
+                  <a href="${contextPath}/CC/User_CC2Form.do" id="notice_tab" class="list_que">
                     <p>[공지]10월 이벤트</p>
                     <span>
                       2021.10.07
