@@ -12,4 +12,6 @@ public interface MemberService {
 	public int removeMember(String id) throws DataAccessException;
 	public MemberVO login(MemberVO memberVO) throws DataAccessException;
 	public String overlapped(String id) throws Exception;
+	public List<MemberVO> findId(String hp)throws Exception;
+	public int findIdCheck(String hp)throws Exception;
 }

@@ -1,6 +1,8 @@
 package com.myspring.yologaza.member.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,13 +15,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.github.scribejava.core.model.Response;
 import com.myspring.yologaza.common.interceptor.ViewNameInterceptor;
 import com.myspring.yologaza.member.service.MemberService;
 import com.myspring.yologaza.member.vo.MemberVO;
@@ -32,14 +37,6 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	@Autowired
 	MemberVO memberVO;
 
-	@RequestMapping(value = {"/searchGoods"}, method = RequestMethod.GET)
-	private ModelAndView searchGoods(HttpServletRequest request,
-								HttpServletResponse response) throws Exception{
-		String viewName = (String) request.getAttribute("viewName");
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName(viewName);
-		return mav;
-	}
 	@RequestMapping(value = {"/goodsRoom.do"}, method = RequestMethod.GET)
 	private ModelAndView goodsRoom(HttpServletRequest request,
 								HttpServletResponse response) throws Exception{
@@ -73,8 +70,8 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		ResponseEntity resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-		
 		try {
+			
 			memberService.addMember(_memberVO);
 			message = "<script>";
 			message += " alert('YOLO가자!에 오신것을 환영합니다.');";
@@ -87,27 +84,6 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 			message += " </script>";
 			e.printStackTrace();
 		}
-		
-//		try {
-//			if(_memberVO.getId() != "" && _memberVO.getPwd() != "" && _memberVO.getName() != "" && _memberVO.gethp() != "") {
-//				memberService.addMember(_memberVO);
-//				message = "<script>";
-//				message +=" alert('회원 가입을 마쳤습니다.로그인창으로 이동합니다.');";
-//				message += " location.href='"+request.getContextPath()+"/member/loginForm.do';";
-//				message += " </script>";
-//			} else {
-//				message = "<script>";
-//				message +=" alert('필수 정보를 입력해주세요!');";
-//				message += " location.href='"+request.getContextPath()+"/member/joinForm.do';";
-//				message += " </script>";
-//			}
-//		}catch(Exception e) {
-//			message = "<script>";
-//			message +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
-//			message += " location.href='"+request.getContextPath()+"/admin_main.do';";
-//			message += " </script>";
-//			e.printStackTrace();
-//		}
 
 		resEntity =new ResponseEntity(message, responseHeaders, HttpStatus.OK);
 		return resEntity;
@@ -177,7 +153,28 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		mav.setViewName("redirect:/main.do");
 		return mav;
 	}
-
+	
+	// 아이디 찾기
+	@RequestMapping(value="/member/findIdView", method=RequestMethod.GET)
+	public ModelAndView findIdView(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String viewName = getViewName(request);
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName(viewName);
+		return mav;
+	}
+	
+	@RequestMapping(value="/member/findId", method=RequestMethod.POST)
+	public String findId(MemberVO memberVO, Model model) throws Exception{
+		logger.info("hp"+memberVO.getHp());
+				
+		if(memberService.findIdCheck(memberVO.getHp())==0) {
+			model.addAttribute("msg", "핸드폰번호를 확인해주세요");
+			return "/member/findIdView";
+		}else {
+			model.addAttribute("member", memberService.findId(memberVO.getHp()));
+			return "/member/findId";
+		}
+	}
 	
 	@RequestMapping(value="/member/*Form.do", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView form(@RequestParam(value="result", required=false) String result,
