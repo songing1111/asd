@@ -39,6 +39,12 @@
 
     });
     </script>
+	<style>
+		.detail-select .detail-select-box .top_menu ul .active {
+			font-weight:bold;
+			color:rgb(112, 173, 71);
+		}
+	</style>
 </head>
 <body>
 <!-- yolo가자 작성 -->
@@ -49,17 +55,17 @@
       </div>
     </div>
     <div class="detail-select-box con">
-      <div class="top_menu">
-        <ul class="row">
-          <li class="cell"><a href="#">모텔</a></li>
-          <li class="cell"><a href="#">호텔</a></li>
-          <li class="cell"><a href="#">펜션</a></li>
-          <li class="cell"><a href="#">리조트</a></li>
-          <li class="cell"><a href="#">게스트하우스</a></li>
-          <li class="cell"><a href="#">캠핑/글램핑</a></li>
-          <li class="cell"><a href="#">한옥</a></li>
-        </ul>
-      </div>
+      <div class="top_menu tab_btn">
+	      <ul class="row">
+	        <li class="cell active"><a href="#tab1">모텔</a></li>
+	        <li class="cell"><a href="#tab2">호텔</a></li>
+	        <li class="cell"><a href="#tab3">펜션</a></li>
+	        <li class="cell"><a href="#tab4">리조트</a></li>
+	        <li class="cell"><a href="#tab5">게스트하우스</a></li>
+	        <li class="cell"><a href="#tab6">캠핑/글램핑</a></li>
+	        <li class="cell"><a href="#tab7">한옥</a></li>
+	      </ul>
+	    </div>
       <!-- 상세 검색창 -->
       <div class="filter_wrap">
         <section class="date-wrap">
@@ -169,78 +175,182 @@
         <div class="goods-wrap">
           <div class="search-menu">
             <div class="search-box">
-             <button type="button" data-sort="distance" class=""><span>거리순</span></button>
-             <button type="button" data-sort="lowprice" class=""><span>낮은 가격 순</span></button>
-             <button type="button" data-sort="highprice" class=""><span>높은 가격 순</span></button>
+             <button type="button" data-sort="newest" id="goods_newest" name="goods_newest"><span>최신순</span></button>
+             <button type="button" data-sort="lowprice" id="hightPrice" name="hightPrice"><span>높은 가격 순</span></button>
+             <button type="button" data-sort="highprice" id="lowerPrice" name="lowerPrice"><span>낮은 가격 순</span></button>
             </div>
             <button type="button" class="btn_map" onclick="pop_map_pc();">지도</button>
           </div>
           <div class="goods_list">
             <div class="goods_title"><h3>상품 리스트</h3></div>
-            <li class="list_1 goods_menu1 goods_box">
-              <a href="${contextPath}/board/goodsInformation.do">
-                <div class="goods_picture">
-                  <img src="https://image.goodchoice.kr/resize_1000X500x0/adimg_new/69041/19415/76471771556d9ece792699bf7c21c31c.jpg" alt="숙소 이미지">
-                </div>
-                <div class="goos_impormation">
-                  <div class="name">
-                    <strong>숙소 명</strong>
-                    <p class="score"><span><em>8.2</em></p>
-                    <p> 8.6km | 강북구 수유동 </p>
-                    <p class="txt_opt">예약취소가능</p>
-                  </div>
-                  <div class="price">
-                    <div class="map_html">
-                      <p>대실&nbsp;<b>15,000원</b></p>
-                      <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>20,000원</b></p>
-                    </div>
-                  </div>    
-                </div>
-              </a>
-            </li><!--    goods_menu1/2/3/4/5(호텔 모텔 리조트 등등 번호 순차 등록)      -->
-            <li class="list_1 goods_menu1 goods_box">
-              <a href="${contextPath}/board/goodsInformation.do">
-                <div class="goods_picture">
-                  <img src="https://image.goodchoice.kr/resize_1000X500x0/adimg_new/69041/19415/76471771556d9ece792699bf7c21c31c.jpg" alt="숙소 이미지">
-                </div>
-                <div class="goos_impormation">
-                  <div class="name">
-                    <strong>숙소 명</strong>
-                    <p class="score"><span><em>8.2</em></p>
-                    <p> 8.6km | 강북구 수유동 </p>
-                    <p class="txt_opt">예약취소가능</p>
-                  </div>
-                  <div class="price">
-                    <div class="map_html">
-                      <p>대실&nbsp;<b>15,000원</b></p>
-                      <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>20,000원</b></p>
-                    </div>
-                  </div>    
-                </div>
-              </a>
-            </li><!--    goods_menu1/2/3/4/5(호텔 모텔 리조트 등등 번호 순차 등록)      -->
-            
-            <c:forEach var="item" items="${goodsMap.hotel}" >     
-				<li class="list_1 goods_menu1 goods_box">
-			      <a href="${contextPath}/board/goodsInformation.do">
-			        <div class="goods_picture">
-			          <img src="${contextPath}/goods_download.do.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-			        </div>
-			        <div class="goos_impormation">
-			          <div class="name">
-			            <strong>${item.goods_name}</strong>
-			            <p class="score"><span><em>8.2</em></p>
-			            <p>${item.goods_address}</p>
-			          </div>
-			          <div class="price">
-			            <div class="map_html">
-			              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-			            </div>
-			          </div>    
-			        </div>
-			      </a>
-			    </li>
-			</c:forEach>   
+            <ul id = "tab1" class="active">
+            	<h3 style ="text-align:left">모텔</h3>
+	            <c:forEach var="item" items="${goodsMap.motel}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul> 
+            <ul id = "tab2" class="active">
+            	<h3 style ="text-align:left">호텔</h3>
+	            <c:forEach var="item" items="${goodsMap.hotel}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul>
+			<ul id = "tab3" class="active">
+				<h3 style ="text-align:left">펜션</h3>
+	            <c:forEach var="item" items="${goodsMap.pension}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul>
+			<ul id = "tab4" class="active">
+				<h3 style ="text-align:left">리조트</h3>
+	            <c:forEach var="item" items="${goodsMap.resort}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul>  
+			<ul id = "tab5" class="active">
+				<h3 style ="text-align:left">게스트하우스</h3>
+	            <c:forEach var="item" items="${goodsMap.guestHouse}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul>  
+			<ul id = "tab6" class="active">
+				<h3 style ="text-align:left">캠핑/글램핑</h3>
+	            <c:forEach var="item" items="${goodsMap.camping}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul>
+			<ul id = "tab7" class="active">
+				<h3 style ="text-align:left">한옥</h3>
+	            <c:forEach var="item" items="${goodsMap.hanok}" >     
+					<li class="list_1 goods_menu1 goods_box">
+				      <a href="${contextPath}/board/goodsInformation.do?goods_id=${item.goods_id }">
+				        <div class="goods_picture">
+				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+				        </div>
+				        <div class="goos_impormation">
+				          <div class="name">
+				            <strong>${item.goods_name}</strong>
+				            <p class="score"><span><em>8.2</em></p>
+				            <p>${item.goods_address}</p>
+				          </div>
+				          <div class="price">
+				            <div class="map_html">
+				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            </div>
+				          </div>    
+				        </div>
+				      </a>
+				    </li>
+				</c:forEach>
+			</ul>
 
           </div>
         </div>

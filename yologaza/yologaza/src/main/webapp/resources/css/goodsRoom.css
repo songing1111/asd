@@ -71,6 +71,7 @@ a {
 .slider-nav{
   padding:0 20px;
   box-sizing: border-box;
+  margin-top: 20px;
 }
 .slider-nav .slick-slide {
   cursor: pointer; 
@@ -398,7 +399,7 @@ a {
 	width: 100%;
 }
 /* on */
-#tab1 .on{
+#tab1 .on .room-box-wrap{
   display: none;
 }
 
