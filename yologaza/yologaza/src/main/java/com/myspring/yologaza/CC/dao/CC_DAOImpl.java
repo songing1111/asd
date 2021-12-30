@@ -43,13 +43,14 @@ public class CC_DAOImpl implements CC_DAO{
 	}
 	
 	@Override
-	public List<Announce_VO> selectAnnounceList(int offset, int count) throws DataAccessException {
+	public List<Announce_VO> selectAnnounceList(int auth, int offset, int count) throws DataAccessException {
 		List<Announce_VO> announceList = new ArrayList<Announce_VO>();
 		SqlSession session = sqlSessionFactory.openSession();
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("offset", offset);
 		params.put("count", count);
+		params.put("auth", auth);
 		
 		try {
 			announceList = session.selectList("mapper.CC.selectAnnounceList",params);
@@ -61,8 +62,8 @@ public class CC_DAOImpl implements CC_DAO{
 	}
 	
 	@Override
-	public List<Frequent_VO> selectFrequentList() throws DataAccessException{
-		List<Frequent_VO> frequentList = sqlSession.selectList("mapper.CC.selectFrequentList");
+	public List<Frequent_VO> selectFrequentList(int auth) throws DataAccessException{
+		List<Frequent_VO> frequentList = sqlSession.selectList("mapper.CC.selectFrequentList", auth);
 		return frequentList;
 	}
 	
@@ -86,8 +87,9 @@ public class CC_DAOImpl implements CC_DAO{
 	}
 	
 	@Override
-	public Question_VO selectReply(int articleNo) throws DataAccessException {
-		return sqlSession.selectOne("mapper.CC.selectReply", articleNo);
+	public List<Question_VO> selectInPersonReply(List<Question_VO> questionList) throws DataAccessException {
+		List<Question_VO> replyList = sqlSession.selectList("mapper.CC.selectInPersonReply", questionList);
+		return replyList;
 	}
 	
 	@Override
@@ -97,13 +99,37 @@ public class CC_DAOImpl implements CC_DAO{
 	
 	@Override
 	public int insertNewQuestion(Map questionMap) throws DataAccessException {
-		int articleNO = selectNewArticleNO();
-		questionMap.put("articleNO", articleNO);
+		int articleNo = selectNewArticleNoQuestion();
+		questionMap.put("articleNo", articleNo);
 		sqlSession.insert("mapper.CC.insertNewQuestion",questionMap);
-		return articleNO;
+		return articleNo;
 	}
 	
-	private int selectNewArticleNO() throws DataAccessException {
-		return sqlSession.selectOne("mapper.CC.selectNewArticleNO");
+	@Override
+	public int insertNewAnnounce(Map announceMap) throws DataAccessException {
+		int articleNo = selectNewArticleNoAnnounce();
+		announceMap.put("articleNo", articleNo);
+		sqlSession.insert("mapper.CC.insertNewAnnounce",announceMap);
+		return articleNo;
+	}
+	
+	@Override
+	public int insertNewFrequent(Map frequentMap) throws DataAccessException {
+		int articleNo = selectNewArticleNoFrequent();
+		frequentMap.put("articleNo", articleNo);
+		sqlSession.insert("mapper.CC.insertNewFrequent",frequentMap);
+		return articleNo;
+	}
+	
+	private int selectNewArticleNoQuestion() throws DataAccessException {
+		return sqlSession.selectOne("mapper.CC.selectNewArticleNoQuestion");
+	}
+	
+	private int selectNewArticleNoAnnounce() throws DataAccessException {
+		return sqlSession.selectOne("mapper.CC.selectNewArticleNoAnnounce");
+	}
+	
+	private int selectNewArticleNoFrequent() throws DataAccessException {
+		return sqlSession.selectOne("mapper.CC.selectNewArticleNoFrequent");
 	}
 }

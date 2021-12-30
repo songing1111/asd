@@ -25,13 +25,13 @@ public class CC_ServiceImpl implements CC_Service{
 	}
 	
 	@Override
-	public List<Announce_VO> listAnnounce(int offset, int count) throws Exception{
-		return cc_DAO.selectAnnounceList(offset, count);
+	public List<Announce_VO> listAnnounce(int auth, int offset, int count) throws Exception{
+		return cc_DAO.selectAnnounceList(auth, offset, count);
 	}
 	
 	@Override
-	public List<Frequent_VO> listFrequent() throws Exception{
-		return cc_DAO.selectFrequentList();
+	public List<Frequent_VO> listFrequent(int auth) throws Exception{
+		return cc_DAO.selectFrequentList(auth);
 	}
 	
 	@Override
@@ -40,9 +40,8 @@ public class CC_ServiceImpl implements CC_Service{
 	}
 	
 	@Override
-	public Question_VO listReply(int articleNo) throws Exception{
-		Question_VO question_VO = cc_DAO.selectReply(articleNo);
-		return question_VO;
+	public List<Question_VO> listReply(List<Question_VO> questionList) throws Exception{
+		return cc_DAO.selectInPersonReply(questionList);
 	}
 	
 	@Override
@@ -54,5 +53,15 @@ public class CC_ServiceImpl implements CC_Service{
 	@Override
 	public int addQuestion(Map questionMap) throws Exception{
 		return cc_DAO.insertNewQuestion(questionMap);
+	}
+	
+	@Override
+	public int addAnnounce(Map announceMap) throws Exception{
+		return cc_DAO.insertNewAnnounce(announceMap);
+	}
+	
+	@Override
+	public int addFrequent(Map frequentMap) throws Exception{
+		return cc_DAO.insertNewFrequent(frequentMap);
 	}
 }

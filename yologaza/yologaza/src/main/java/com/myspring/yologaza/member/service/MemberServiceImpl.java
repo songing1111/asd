@@ -2,6 +2,7 @@ package com.myspring.yologaza.member.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,10 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 @Service("memberService")
 @Transactional(propagation = Propagation.REQUIRED)
 public class MemberServiceImpl implements MemberService{
+	private static final MemberVO String = null;
 	@Autowired
 	private MemberDAO memberDAO;
+	private MemberVO memberVO;
 	
 	@Override
 	public List listMembers() throws DataAccessException {
@@ -51,6 +54,16 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int findIdCheck(String hp) throws Exception {
 		return  memberDAO.findIdCheck(hp);
+	}
+	
+	@Override
+	public int findPwCheck(MemberVO memberVO)throws Exception{
+		return memberDAO.findPwCheck(memberVO);
+	}
+    
+    @Override
+	public void findPw(String hp,String id, String pwd)throws Exception{
+    	memberDAO.findPw(hp, id, pwd);
 	}
 
 }

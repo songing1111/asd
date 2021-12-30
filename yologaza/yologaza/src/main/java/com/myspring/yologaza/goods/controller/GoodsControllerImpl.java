@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +23,8 @@ import com.myspring.yologaza.board.vo.ArticleVO;
 import com.myspring.yologaza.common.base.BaseController;
 import com.myspring.yologaza.goods.service.GoodsService;
 import com.myspring.yologaza.goods.vo.GoodsVO;
+import com.myspring.yologaza.member.service.MemberService;
+import com.myspring.yologaza.member.vo.MemberVO;
 
 @Controller("goodsController")
 public class GoodsControllerImpl extends BaseController implements GoodsController {
@@ -29,13 +34,16 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	@Autowired
 	private static final String ARTICLE_IMAGE_REPO = "C:\\board\\article_image";
 	@Autowired
+	private static final String MEMBER_IMAGE_REPO = "C:\\member\\member_image";
+	@Autowired
 	BoardService boardService;
 	@Autowired
 	ArticleVO articleVO;
+	@Autowired
+	MemberService memberService;
 	
 	@Override
-	@RequestMapping(value="/board/goodsInformation.do",
-							method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/goods/goodsInformation.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView listArticles(@RequestParam("goods_id") String goods_id,
 					HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = (String)request.getAttribute("viewName");

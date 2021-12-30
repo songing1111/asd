@@ -1,11 +1,12 @@
 package com.myspring.yologaza.CC.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import org.springframework.stereotype.Component;
 
 @Component("question_VO")
-public class Question_VO {
+public class Question_VO implements Serializable{
 	private int articleNo;
 	private int parentNo;
 	private String id;

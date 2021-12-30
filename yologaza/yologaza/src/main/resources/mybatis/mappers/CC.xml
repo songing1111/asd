@@ -38,8 +38,11 @@
   <select id="selectAnnounceList" resultMap="announceResult">
     <![CDATA[
 		
-         select SQL_CALC_FOUND_ROWS * from announce	order by writeDate asc limit #{offset},#{count}
+         select SQL_CALC_FOUND_ROWS * from announce	where auth = #{auth} order by writeDate asc limit #{offset},#{count}
     ]]>
+  </select>
+  <select id="countAnnounce" resultType="int">
+  	select FOUND_ROWS();
   </select>
   <select id="selectAnnounce" resultType="announce_VO"   parameterType="int">
     <![CDATA[
@@ -48,43 +51,72 @@
     ]]>
   </select>
   
-  <select id="countAnnounce" resultType="int">
-  	select FOUND_ROWS();
-  </select>
-  
   <select id="selectFrequentList" resultMap="frequentResult">
     <![CDATA[
 		
-         select * from frequent_question	order by writeDate asc 
+         select * from frequent_question where auth = #{auth}	order by writeDate asc 
     ]]>
   </select>
   
   <select id="selectInPersonQuestion" resultMap="questionResult">
     <![CDATA[
 		
-         select SQL_CALC_FOUND_ROWS * from question_in_person	where id = "${id}" order by writeDate asc limit #{offset},#{count}
+         select SQL_CALC_FOUND_ROWS * from question_in_person	where id = #{id} order by writeDate asc limit #{offset},#{count}
     ]]>
   </select>
   <select id="countInPersonQuestion" resultType="int">
   	select FOUND_ROWS();
   </select>
-  <select id="selectInPersonReply" resultMap="questionResult" parameterType="int">
-  <![CDATA[
+  <select id="selectArticleNo" resultMap="questionResult">
+    <![CDATA[
 		
-         select * from question_in_person	where parentNo = ${articleNo} order by writeDate asc
+         select articleNo from question_in_person	where id = #{id} order by writeDate asc limit #{offset},#{count}
     ]]>
+  </select>
+  <select id="selectInPersonReply" resultType="question_VO">
+  		select * from question_in_person where parentNo in
+  		<if test="list != null">
+         <foreach collection="list" item="item" open="(" close=")" separator=",">
+             		 #{item.articleNo}
+         </foreach>
+         </if>
+         order by writeDate asc
   </select>
   
   <insert id="insertNewQuestion" parameterType="java.util.Map">
 		<![CDATA[
-			insert into question_in_person(articleNO, content, id, type, hp, email, auth)
-			values(#{articleNO}, #{content}, #{id}, #{type}, #{hp}, #{email}, #{auth})
+			insert into question_in_person(articleNo, content, id, type, hp, email, auth)
+			values(#{articleNo}, #{content}, #{id}, #{type}, #{hp}, #{email}, #{auth})
 		]]>
 	</insert>
 	
-	<select id="selectNewArticleNO" resultType="int">
+  <insert id="insertNewAnnounce" parameterType="java.util.Map">
 		<![CDATA[
-			SELECT IFNULL(max(articleNO), 0) + 1 from question_in_person	
+			insert into announce(articleNo, content, title, id, name, auth)
+			values(#{articleNo}, #{content}, #{title}, #{id}, #{name}, #{auth})
+		]]>
+	</insert>
+	
+	<insert id="insertNewFrequent" parameterType="java.util.Map">
+		<![CDATA[
+			insert into frequent_question(articleNo, title, id, name, content, auth, type)
+			values(#{articleNo}, #{title}, #{id}, #{name}, #{content}, #{auth}, #{type})
+		]]>
+	</insert>
+	
+	<select id="selectNewArticleNoQuestion" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(max(articleNo), 0) + 1 from question_in_person	
+		]]>
+	</select>
+	<select id="selectNewArticleNoAnnounce" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(max(articleNo), 0) + 1 from announce	
+		]]>
+	</select>
+	<select id="selectNewArticleNoFrequent" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(max(articleNo), 0) + 1 from frequent_question	
 		]]>
 	</select>
 </mapper>
