@@ -1,6 +1,7 @@
 package com.myspring.yologaza.business.goods.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,80 @@ public class BusinessGoodsServiceImpl implements BusinessGoodsService {
 	}
 	
 	@Override
+	public int addNewGoodsRoom(Map newGoodsRoomMap) throws Exception{
+		
+		int goods_uroom = businessGoodsDAO.insertNewGoodsRoom(newGoodsRoomMap);
+		ArrayList<ImageFileVO> imageFileList = (ArrayList)newGoodsRoomMap.get("imageFileList");
+		for(ImageFileVO imageFileVO : imageFileList) {
+			imageFileVO.setGoods_uroom(goods_uroom);
+		}
+		businessGoodsDAO.insertGoodsRoomImageFile(imageFileList);
+		return goods_uroom;
+	}
+	
+	@Override
 	public List<GoodsVO> listNewGoods(Map condMap) throws Exception{
 		return businessGoodsDAO.selectNewGoodsList(condMap);
+	}
+	
+	@Override
+	public Map selectNewGoods(String goods_id) throws Exception {
+		Map goodsMap=new HashMap();
+		GoodsVO goodsVO = businessGoodsDAO.selectNewGoods(goods_id);
+		goodsMap.put("goodsVO", goodsVO);
+		List<ImageFileVO> imageList =businessGoodsDAO.selectNewGoodsImg(goods_id);
+		goodsMap.put("imageList", imageList);
+		return goodsMap;
+	}
+	
+	@Override
+	public void modifyGoodsInfo(Map modGoodsMap) throws Exception{
+		businessGoodsDAO.updateGoodsInfo(modGoodsMap);
+	}
+	
+	@Override
+	public void modifyRoomInfo(Map modRoomMap) throws Exception{
+		businessGoodsDAO.updateRoomInfo(modRoomMap);
+	}
+	
+	@Override
+	public void modifyGoodsImage(List<ImageFileVO> imageFileList) throws Exception{
+		businessGoodsDAO.updateGoodsImage(imageFileList); 
+	}
+	
+	@Override
+	public void removeGoodsImage(int goods_uimg) throws Exception{
+		businessGoodsDAO.deleteGoodsImage(goods_uimg);
+	}
+	
+	@Override
+	public void addNewGoodsImage(List imageFileList) throws Exception{
+		businessGoodsDAO.insertGoodsImageFile(imageFileList);
+	}
+	
+	@Override
+	public Map selectNewGoodsRoom(String goods_uroom) throws Exception {
+		Map<String, Object> goodsRoomMap=new HashMap();
+		GoodsVO roomVO = businessGoodsDAO.selectNewGoodsRoom(goods_uroom);
+		goodsRoomMap.put("roomVO", roomVO);
+		List<ImageFileVO> roomImageList =businessGoodsDAO.selectNewGoodsRoomImg(goods_uroom);
+		goodsRoomMap.put("roomImageList", roomImageList);
+		return goodsRoomMap;
+	}
+	
+	@Override
+	public Map selectAllGoodsList(String uid) throws Exception {
+		Map<String, Object> listGoodsMap=new HashMap();
+		List goodsList =businessGoodsDAO.selectAllGoodsList(uid);
+		listGoodsMap.put("goodsList", goodsList);
+		return listGoodsMap;
+	}
+	
+	@Override
+	public Map selectAllRoomList(String goods_id) throws Exception {
+		Map<String, Object> listRoomMap=new HashMap();
+		List roomList =businessGoodsDAO.selectAllRoomList(goods_id);
+		listRoomMap.put("roomList", roomList);
+		return listRoomMap;
 	}
 }

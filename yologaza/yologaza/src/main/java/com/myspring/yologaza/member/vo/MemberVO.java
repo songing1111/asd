@@ -15,7 +15,10 @@ public class MemberVO {
 	private String email2;
 	private String hp;
 	private String auth;
+	private String detail1;
+	private String detail2;
 	private String memFileName;
+	private int member_point;
 	private Date joinDate;
 	
 	public MemberVO() {
@@ -105,12 +108,36 @@ public class MemberVO {
 		this.auth = auth;
 	}
 
+	public String getDetail1() {
+		return detail1;
+	}
+
+	public void setDetail1(String detail1) {
+		this.detail1 = detail1;
+	}
+
+	public String getDetail2() {
+		return detail2;
+	}
+
+	public void setDetail2(String detail2) {
+		this.detail2 = detail2;
+	}
+
 	public String getMemFileName() {
 		return memFileName;
 	}
 
 	public void setMemFileName(String memFileName) {
 		this.memFileName = memFileName;
+	}
+
+	public int getMember_point() {
+		return member_point;
+	}
+
+	public void setMember_point(int member_point) {
+		this.member_point = member_point;
 	}
 
 	public Date getJoinDate() {

@@ -1,16 +1,21 @@
 <%-- 송상우 100% --%>
+<!-- 2차기여도 : 이택진100% -->
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"
     isELIgnored="false"    
     %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@page import="java.util.Date" %>
+<%@page import="java.text.SimpleDateFormat" %>
+
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
 <html>
 <head>
 <script src="${contextPath}/resources/js/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a1f3ccdf06f19b1518173124c82247b3"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6cf929ac0c936c4cda3566648aaf3dc4&libraries=services"></script>
 <style>
 body{
   font-size: 14px;
@@ -220,21 +225,21 @@ p {
   margin-top:30px;
 }
 
-.tab_each{
-  height:500px;
+.tab_each .reservation{
+	height:220px;
+	margin-top:20px;
+	border:1px solid #ddd;
+	box-sizing: border-box;
 }
 
 .tab_each .reservation img{
-  width:45%;
-  height:220px;
-  border:1px solid rgba(0,0,0,0.2);
+  height:100%;
   display:inline-block;
 }
 
 .tab_each .reservation .descript{
-  width:54%;
-  height:220px;
-  border:1px solid rgba(0,0,0,0.2);
+  height:100%;
+  border-left: none;
   display:inline-block;
   position:relative;
   right:6px;
@@ -247,8 +252,10 @@ p {
 }
 
 .tab_each .reservation .descript input{
-  float:right;
-  cursor:pointer;
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  cursor: pointer;
 }
 
 .tab_each .reservation .descript a2{
@@ -266,7 +273,7 @@ p {
 
 .tab_each .reservation .descript .detail{
   display:block;
-  width:365px;
+  width:410px;
   height:30px;
   margin-top:30px;
 }
@@ -275,7 +282,9 @@ p {
   display:none;
   width:200px;
   height:30px;
-  position:relative;
+  position: absolute;
+  top: 221px;
+  left: 85px;
   border : 1px solid rgba(0,0,0,0.2);
   border-radius : 4px;
   box-shadow: 0px 0px 1px 1px rgba(190, 190, 190, 0.6);
@@ -307,7 +316,7 @@ p {
 .tab_each .reservation .descript .button{
   position:absolute;
   bottom:0;
-  width:365px;
+  width:410px;
 }
 
 .tab_each .reservation .descript .button button{
@@ -327,7 +336,7 @@ p {
 
 .tab_each .reservation .descript .button .price{
   zoom:1;
-  width:130px;
+  width:180px;
   float:right;
   position:relative;
   margin-top:15px;
@@ -337,14 +346,14 @@ p {
   text-align:right;
 }
 
-.map{
-  display:none;
-  width:300px;
-  height:300px;
-  position:absolute;
-  margin-left:200px;
-  z-index:2;
-  background:red;
+.map-box{
+	display:none;
+	height: 270px;
+	position: absolute;
+	right: 365px;
+	top: 220px;
+	z-index: 2;
+	background:red;
 }
 </style>
 <script type="text/javascript">
@@ -360,11 +369,11 @@ $(function() {
 });
   $('.mapicon').click(function(){
     var idx = $(".mapicon").index(this)
-    if($('.map').eq(idx).css('display')=='none'){
-           $('.map').eq(idx).show();
+    if($('.map-box').eq(idx).css('display')=='none'){
+           $('.map-box').eq(idx).show();
   }
     else{
-      $('.map').eq(idx).hide();
+      $('.map-box').eq(idx).hide();
     }
 });
 });
@@ -406,63 +415,84 @@ $(function() {
               </div>
             </div>
             <div class="tab_each">
-              <div class="reservation">
-                <img src="https://image.goodchoice.kr/resize_490x348/adimg_new/69041/19415/76471771556d9ece792699bf7c21c31c.jpg">
-                <div class="descript">
-                  <a1>숙소명</a1>
-                  <input type="checkbox">
-                  <a2>선택한 방 종류</a2>
-                  <a3>체크인</a3>~<a3>체크아웃</a3>
-                  <div class="detail">
-                    <button class="cancel">예약 취소</button>
-                    <input class="phonenumber" type="text" value="#" readonly>
-                  </div>
-                  <div class="button">
-                    <button class="mapicon"><i class="fas fa-map-marker-alt"></i></button>
-                    <button class="phoneicon"><i class="fas fa-phone-alt"></i></button>
-                    <a4>결제가</a4>
-                    <input type="text" class="price" value="#원" readonly>
-                  </div>
-                </div>
-                <div id="map1" class="map">
-                </div>
-              </div>
-              <div class="reservation">
-                <img src="https://image.goodchoice.kr/resize_490x348/adimg_new/68065/381552/536f3a7ee6b4bba14b3c710645062570.jpg">
-                <div class="descript">
-                  <a1>숙소명</a1>
-                  <input type="checkbox">
-                  <a2>선택한 방 종류</a2>
-                  <a3>체크인</a3>~<a3>체크아웃</a3>
-                  <div class="detail">
-                    <button class="used">이용 완료</button>
-             	 	<input class="phonenumber" type="text" value="#" readonly>
-                  </div>
-                  <div class="button">
-                    <button class="mapicon"><i class="fas fa-map-marker-alt"></i></button>
-                    <button class="phoneicon"><i class="fas fa-phone-alt"></i></button>
-                    <a4>결제가</a4>
-                    <input type="text" class="price" value="#원" readonly>
-                  </div>
-                </div>
-                <div id="map2" class="map">
-                </div>
-              </div>
+            	<c:forEach var="item" items="${mypageReservation}" varStatus="cnt">
+	           		<div class="reservation">
+	           			<a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }">
+							<img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
+						</a>
+						<div class="descript">
+						  <h1>${item.goods_name}</h1><br>
+						  <input type="checkbox">
+						  <h3>체 크 인&nbsp; : ${item.checkIn}&nbsp;${item.goods_checkIn}</h3>
+						  <h3>체크아웃 : ${item.checkOut}&nbsp;${item.goods_checkOut}</h3>
+						  <div class="detail">
+						    <button class="cancel">예약 취소</button>
+						    <input class="phonenumber" type="text" value="${item.goods_hp}" readonly>
+						  </div>
+						  <div class="button">
+						    <button class="mapicon"><i class="fas fa-map-marker-alt"></i></button>
+						    <button class="phoneicon"><i class="fas fa-phone-alt"></i></button>
+						    <h3 class="price">결제가 : <fmt:formatNumber type="number" maxFractionDigits="0"  value="${item.price}" />원</h3>
+						  </div>
+						  <div id="map-box" class="map-box">
+							  <div id="${item.rid}" style="width:270px;height:270px;"></div>
+						  </div>
+						   <script>
+								//주소-좌표 변환 객체를 생성합니다
+								var geocoder = new kakao.maps.services.Geocoder();
+									var mapContainer = document.getElementById('${item.rid}'), // 지도를 표시할 div 
+									    mapOption = {
+									        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+									        level: 3 // 지도의 확대 레벨
+									    };  
+									
+									// 지도를 생성합니다    
+									var map = new kakao.maps.Map(mapContainer, mapOption); 
+									
+									
+									
+									// 주소로 좌표를 검색합니다
+									geocoder.addressSearch('${item.roadAddress}', function(result, status) {
+									
+									    // 정상적으로 검색이 완료됐으면 
+									     if (status === kakao.maps.services.Status.OK) {
+									
+									        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+									
+									        // 결과값으로 받은 위치를 마커로 표시합니다
+									        var marker = new kakao.maps.Marker({
+									            map: map,
+									            position: coords
+									        });
+									
+									        // 인포윈도우로 장소에 대한 설명을 표시합니다
+									        var infowindow = new kakao.maps.InfoWindow({
+									            content: '<div style="width:150px;text-align:center;padding:6px 0;">${item.goods_name}</div>'
+									        });
+									        infowindow.open(map, marker);
+									
+									        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+									        map.setCenter(coords);
+									    } 
+									});    
+								</script>
+						</div>	
+		            </div>
+
+					
+            	</c:forEach>
+              
+              
             </div>
             
           </div>
         </div>
       </div>
     </div>
-<script>
-var container = document.getElementsById('map1'); //지도를 담을 영역의 DOM 레퍼런스
-var options = { //지도를 생성할 때 필요한 기본 옵션
-	center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-	level: 3 //지도의 레벨(확대, 축소 정도)
-};
+    
+    
 
-var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-</script>
+
 </body>
 </html>

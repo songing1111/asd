@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -27,12 +26,6 @@ public class MemberDAOImpl implements MemberDAO{
 	@Override
 	public int insertMember(MemberVO memberVO) throws DataAccessException {
 		int result = sqlSession.insert("mapper.member.insertMember", memberVO);
-		return result;
-	}
-	
-	@Override
-	public int deleteMember(String id) throws DataAccessException {
-		int result = sqlSession.delete("mapper.member.deleteMember", id);
 		return result;
 	}
 	
@@ -73,6 +66,18 @@ public class MemberDAOImpl implements MemberDAO{
 		map.put("id", id);
 		map.put("pwd", pwd);
 		sqlSession.update("mapper.member.findPwd", map);
+	}
+	
+	@Override
+	public int deleteMember(String id) throws DataAccessException{
+		int result = sqlSession.delete("mapper.member.deleteMember", id);
+		return result;
+	}
+	
+	@Override
+	public int updateDeletedMember(Map deleteMap) throws DataAccessException{
+		int result = sqlSession.update("mapper.member.updateDeletedMember", deleteMap);
+		return result;
 	}
 
 }

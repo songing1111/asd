@@ -5,10 +5,11 @@
 
 <mapper namespace="mapper.cart">
 	<!-- 리절트 맵 정의 -->
-	<resultMap id="cartResult" type="CartVO">
+	<resultMap id="cartResult" type="cartVO">
+		<result property="cart_uid" column="cart_uid" />
 		<result property="id" column="id" />
 		<result property="goods_uroom" column="goods_uroom" />
-		<result property="cart_uid" column="cart_uid" />
+		<result property="price" column="price" />
 		<result property="cart_goods_qty" column="cart_goods_qty" />
 		<result property="creaDatetime" column="creaDatetime" />
 	</resultMap>
@@ -27,7 +28,10 @@
 		<result property="account" column="account" />		
 		<result property="goods_homePage" column="goods_homePage" />
 		<result property="goods_name" column="goods_name" />
-		<result property="goods_address" column="goods_address" />		
+		<result property="zipcode" column="zipcode" />
+		<result property="roadAddress" column="roadAddress" />
+		<result property="jibunAddress" column="jibunAddress" />
+		<result property="namujiAddress" column="namujiAddress" />		
 		<result property="goods_description" column="goods_description" />
 		<result property="goods_room_price1" column="goods_room_price1" />
 		<result property="goods_room_price2" column="goods_room_price2" />
@@ -48,7 +52,6 @@
 		<result property="goods_room_type" column="goods_room_type" />
 		<result property="goods_capacity" column="goods_capacity" />
 		<result property="goods_introduce" column="goods_introduce" />
-		
 	</resultMap>	
 	
 	<resultMap id="imageResult" type="ImageFileVO">
@@ -60,16 +63,16 @@
 
 	<select id="selectCartList"  parameterType="cartVO"  resultMap="cartResult"  >
 		<![CDATA[
-			select c.*, d.goods_room_price1, d.goods_room_price2
-			from yolo_cart c, goods_detail d
-			where id=#{id} 
-            and c.goods_uroom = d.goods_uroom;
+			select yolo_cart.*
+			from yolo_cart
+			where id=#{id}
+			order by goods_uroom;
 		]]>
 	</select>
 	
 	<select id="selectGoodsList" resultMap="goodsResult" parameterType="java.util.Map">
 		<![CDATA[
-			select g.*,d.fileName, s.goods_name, s.goods_address from goods_detail g, goods_img d, goods s
+			select g.*,d.fileName, s.goods_name, s.roadAddress from goods_detail g, goods_img d, goods s
 			where g.goods_uroom=d.goods_uroom
             and g.goods_id = s.goods_id
 			and d.filetype='room'
@@ -80,7 +83,7 @@
 		</foreach>
 		<![CDATA[
 			group by goods_uroom
-			order by g.goods_room_creDate desc
+            order by goods_uroom;
 		]]>
 	</select>
 	

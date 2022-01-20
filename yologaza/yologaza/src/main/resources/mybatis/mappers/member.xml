@@ -9,10 +9,14 @@
 		<result property="id" column="id" />
         <result property="pwd" column="pwd" />
         <result property="name" column="name" />
+        <result property="nickName" column="nickName" />
         <result property="email1" column="email1" />
         <result property="email2" column="email2" />
         <result property="hp" column="hp" />
+        <result property="member_point" column="member_point" />
         <result property="auth" column="auth" />
+        <result property="detail1" column="detail1" />
+        <result property="detail2" column="detail2" />
         <result property="memFileName" column="memFileName" />
         <result property="joinDate" column="joinDate" />
 	</resultMap> 
@@ -25,11 +29,47 @@
       <result property="joinDate" column="joinDate" />
    </resultMap> -->
 
-
+	<!-- 관리자 회원 관리 -->
 	<select id="selectAllMemberList" resultMap="memResult">
+      select SQL_CALC_FOUND_ROWS * from member 
+		 <where>
+         <if test="date1 != 0 and date2 != 0">
+         UNIX_TIMESTAMP(joinDate) >= #{date1} 
+         and #{date2} > UNIX_TIMESTAMP(joinDate)  
+         </if>
+         <if test="auth != '' and auth != null">
+         and auth = #{auth}
+         </if>
+         <if test="type != '' and type != null and query != '' and query != null">
+         and ${type} like CONCAT('%',#{query},'%')
+         </if>
+         </where>
+         order by joinDate asc	limit #{offset},#{count}
+	</select>
+	<select id="countAllMember" resultType="int">
+  		select FOUND_ROWS();
+  	</select>
+  	<select id="selectAllMemberListByAuth" resultMap="memResult">
       <![CDATA[
-         select * from member	order by joinDate asc 	
+         select SQL_CALC_FOUND_ROWS * from member where auth = #{auth}	order by uid asc	limit #{offset},#{count}
       ]]>
+	</select>
+	<!-- 관리자 탈퇴 회원 관리 -->
+	<select id="selectAllDeleteMemberList" resultMap="memResult">
+         select SQL_CALC_FOUND_ROWS * from deletemember 
+		 <where>
+         <if test="date1 != 0 and date2 != 0">
+         UNIX_TIMESTAMP(joinDate) >= #{date1} 
+         and #{date2} > UNIX_TIMESTAMP(joinDate)  
+         </if>
+         <if test="auth != '' and auth != null">
+         and auth = #{auth}
+         </if>
+         <if test="type != '' and type != null and query != '' and query != null">
+         and ${type} like CONCAT('%',#{query},'%')
+         </if>
+         </where>
+         order by joinDate asc	limit #{offset},#{count}
 	</select>
 	
 	<!-- 아이디 찾기 -->
@@ -125,8 +165,17 @@
 	   delete from  member
 	   where
 	   id=#{id}
+	   
 	]]>      
   </delete>
+  
+  <update id="updateDeletedMember" parameterType="java.util.HashMap">
+		 update deletemember set detail1 = #{detail1}
+		 <if test="detail2 != '' and detail2 != null">
+		 , detail2 = #{detail2}
+		 </if>
+		 where id = #{id}
+  </update>
 	
 	
 	<!-- 동적 SQL문 -->
@@ -206,7 +255,7 @@
 	<select id="loginById" resultType="memberVO"  parameterType="memberVO" >
       <![CDATA[
          select * from member
-         where id = #{id} and pwd = #{pwd} and (auth="1" or auth="2" or auth="3")
+         where id = #{id} and pwd = #{pwd}
       ]]>
     </select>
     
@@ -214,6 +263,13 @@
       <![CDATA[
          select * from member
          where id = #{id} and pwd = #{pwd} and (auth="2" or auth="3")
+      ]]>
+    </select>
+    
+    <select id="AdminloginById" resultType="memberVO"  parameterType="memberVO" >
+      <![CDATA[
+         select * from member
+         where id = #{id} and pwd = #{pwd} and auth="3"
       ]]>
     </select>
     
@@ -242,14 +298,19 @@
 		where 
 		id=#{id}
 	</update>
-	
+	<update id="updateImgMember"  parameterType="java.util.Map">
+			update member
+			set  
+			<if test="memFileName != '' and memFileName != null">
+				memFileName=#{memFileName}
+			</if>
+			where 
+			uid = #{uid}
+	</update>
 	<select id="selectMyDetailInfo" resultType="memberVO"   parameterType="String"  >
 	    <![CDATA[
 			select * from member 
 			where id=#{id}
     	]]>
 	</select>	
-	
-	
-
 </mapper>

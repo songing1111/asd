@@ -1,10 +1,8 @@
 package com.myspring.yologaza.member.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -13,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.myspring.yologaza.member.dao.MemberDAO;
 import com.myspring.yologaza.member.vo.MemberVO;
-
-import net.nurigo.java_sdk.api.Message;
-import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Service("memberService")
 @Transactional(propagation = Propagation.REQUIRED)
@@ -34,10 +29,6 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int addMember(MemberVO member) throws DataAccessException {
 		return memberDAO.insertMember(member);
-	}
-	@Override
-	public int removeMember(String id) throws DataAccessException {
-		return memberDAO.deleteMember(id);
 	}
 	@Override
 	public MemberVO login(MemberVO memberVO) {
@@ -65,5 +56,14 @@ public class MemberServiceImpl implements MemberService{
 	public void findPw(String hp,String id, String pwd)throws Exception{
     	memberDAO.findPw(hp, id, pwd);
 	}
+    
+	@Override
+	public int removeMember(String id) throws DataAccessException{
+		return memberDAO.deleteMember(id);
+	}
 
+	@Override
+	public int addDeletedMember(Map deleteMap) throws DataAccessException {
+		return memberDAO.updateDeletedMember(deleteMap);
+	}
 }

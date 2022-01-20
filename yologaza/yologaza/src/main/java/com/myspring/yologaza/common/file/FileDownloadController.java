@@ -124,10 +124,35 @@ public class FileDownloadController {
 		File image=new File(filePath);
 		
 		if (image.exists()) { 
-			Thumbnails.of(image).size(121,154).outputFormat("jpg").toOutputStream(out);
+			Thumbnails.of(image).size(121,154).outputFormat("png").toOutputStream(out);
 		}
 		byte[] buffer = new byte[1024 * 8];
 		out.write(buffer);
+		out.close();
+	}
+	
+private static final String ROOM_IMAGE_REPO_PATH = "C:\\yoloshopping\\file_repo";
+	
+	@RequestMapping("/room_download.do")
+	protected void room_download(@RequestParam("fileName") String fileName,
+		                 	@RequestParam("goods_id") String goods_id,
+		                 	@RequestParam("goods_uroom") String goods_uroom,
+			                 HttpServletResponse response) throws Exception {
+		OutputStream out = response.getOutputStream();
+		String filePath=ROOM_IMAGE_REPO_PATH+"\\"+goods_id+"\\"+goods_uroom+"\\"+fileName;
+		File image=new File(filePath);
+
+		response.setHeader("Cache-Control","no-cache");
+		response.addHeader("Content-disposition", "attachment; fileName="+fileName);
+		FileInputStream in=new FileInputStream(image); 
+		byte[] buffer=new byte[1024*8];
+		while(true){
+			int count=in.read(buffer); //버퍼에 읽어들인 문자개수
+			if(count==-1)  //버퍼의 마지막에 도달했는지 체크
+				break;
+			out.write(buffer,0,count);
+		}
+		in.close();
 		out.close();
 	}
 }

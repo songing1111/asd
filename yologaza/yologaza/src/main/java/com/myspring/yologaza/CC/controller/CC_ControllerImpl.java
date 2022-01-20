@@ -39,9 +39,12 @@ public class CC_ControllerImpl implements CC_Controller {
 	Question_VO question_VO;
 	
 	@Override
-	@RequestMapping(value= {"/CC/announceList.do", "/CC/admin_announceList.do"}, method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	@RequestMapping(value= {"/CC/announceList.do", "/CC/business_announceList.do", "/CC/admin_announceList.do"}, method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView announceList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		int auth = 1;
+		if(request.getRequestURL().toString().equals("http://localhost:8080/yologaza/CC/business_announceList.do"))
+			auth = 2;
 		//pagination
 		Pagination pagination = new Pagination();
 		pagination.setPage(1);
@@ -63,10 +66,12 @@ public class CC_ControllerImpl implements CC_Controller {
 		return mav;
 	}
 	
-	@RequestMapping(value= {"/CC/frequentList.do", "/CC/admin_frequentList.do"}, method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value= {"/CC/frequentList.do", "/CC/business_frequentList.do", "/CC/admin_frequentList.do"}, method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView frequentList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = (String)request.getAttribute("viewName");
 		int auth = 1;
+		if(request.getRequestURL().toString().equals("http://localhost:8080/yologaza/CC/business_frequentList.do"))
+			auth = 2;
 		if(request.getParameter("auth") != null)
 			auth = Integer.parseInt(request.getParameter("auth"));
 		request.setAttribute("auth", auth);
@@ -78,6 +83,8 @@ public class CC_ControllerImpl implements CC_Controller {
 	
 	@RequestMapping(value= "/CC/inPersonQuestion.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView questionList(HttpServletRequest Request, HttpServletResponse response) throws Exception {
+		String viewName = (String)Request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
 		Pagination pagination = new Pagination();
 		pagination.setPage(1);
 		pagination.setCountList(5);
@@ -89,15 +96,18 @@ public class CC_ControllerImpl implements CC_Controller {
 		pagination.Paging();
 		HttpSession session = Request.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("member");
-		String id = memberVO.getId();
-		String viewName = (String)Request.getAttribute("viewName");
-		List<Question_VO> questionList = cc_Service.listQuestion(offset, pagination.getCountList(), id);
-		List<Question_VO> replyList = cc_Service.listReply(questionList);
-		
-		ModelAndView mav = new ModelAndView(viewName);
-		mav.addObject("questionList", questionList);
-		mav.addObject(pagination);
-		mav.addObject("replyList", replyList);
+		if(memberVO != null) {
+			String id = memberVO.getId();
+			List<Question_VO> questionList = cc_Service.listQuestion(offset, pagination.getCountList(), id);
+			List<Question_VO> replyList = cc_Service.listReply(questionList);
+			
+			mav.addObject("questionList", questionList);
+			mav.addObject(pagination);
+			mav.addObject("replyList", replyList);
+		}else {
+			mav.addObject("msg", "로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+			mav.addObject("url", "/yologaza/member/loginForm.do");
+		}
 		return mav;
 	}
 	
@@ -119,7 +129,7 @@ public class CC_ControllerImpl implements CC_Controller {
 		return mav;
 	}
 	
-	@RequestMapping(value={"/CC/viewAnnounce.do","/CC/admin_viewAnnounce.do"} ,method = RequestMethod.GET)
+	@RequestMapping(value={"/CC/viewAnnounce.do","/CC/business_viewAnnounce.do","/CC/admin_viewAnnounce.do"} ,method = RequestMethod.GET)
 	public ModelAndView viewAnnounce(@RequestParam("articleNo") int articleNo,
                                     HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String viewName = (String)request.getAttribute("viewName");

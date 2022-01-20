@@ -1,11 +1,11 @@
 package com.myspring.yologaza.goods.vo;
 
 import java.sql.Date;
-import java.sql.Time;
 
 public class GoodsVO {
 	// goods
 	private int goods_id;
+	private int uid;
 	private int goods_uroom;
 	private String goods_type;
 	private String goods_email1;
@@ -19,13 +19,16 @@ public class GoodsVO {
 	private String account;
 	private String goods_homePage;
 	private String goods_name;
-	private String goods_address;
+	private String zipcode;
+	private String roadAddress;
+	private String jibunAddress;
+	private String namujiAddress;
 	private String goods_description;
 	private String goods_baseImpormation;
 	private String goods_chargeImpormation;
 	private String goods_around;
-	private String   goods_checkIn;
-	private String   goods_checkOut;
+	private String goods_checkIn;
+	private String goods_checkOut;
 	private String goods_motel_endtime;
 	private String goods_motel_usetime;
 	
@@ -69,6 +72,14 @@ public class GoodsVO {
 
 	public void setGoods_id(int goods_id) {
 		this.goods_id = goods_id;
+	}
+
+	public int getUid() {
+		return uid;
+	}
+
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 
 	public int getGoods_uroom() {
@@ -175,12 +186,36 @@ public class GoodsVO {
 		this.goods_name = goods_name;
 	}
 
-	public String getGoods_address() {
-		return goods_address;
+	public String getZipcode() {
+		return zipcode;
 	}
 
-	public void setGoods_address(String goods_address) {
-		this.goods_address = goods_address;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	public String getRoadAddress() {
+		return roadAddress;
+	}
+
+	public void setRoadAddress(String roadAddress) {
+		this.roadAddress = roadAddress;
+	}
+
+	public String getJibunAddress() {
+		return jibunAddress;
+	}
+
+	public void setJibunAddress(String jibunAddress) {
+		this.jibunAddress = jibunAddress;
+	}
+
+	public String getNamujiAddress() {
+		return namujiAddress;
+	}
+
+	public void setNamujiAddress(String namujiAddress) {
+		this.namujiAddress = namujiAddress;
 	}
 
 	public String getGoods_description() {
@@ -421,5 +456,5 @@ public class GoodsVO {
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
-
+	
 }

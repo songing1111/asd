@@ -15,6 +15,12 @@
   <meta charset="UTF-8">
 <title>어드민헤더</title>
 <link href="${contextPath}/resources/css/header.css" rel="stylesheet" type="text/css" media="screen">
+<script type="text/javascript">
+	if(("${member.auth}" != 3) && (window.location != "http://localhost:8080/yologaza/admin/member/admin_loginForm.do")){
+		alert("관리자 권한이 필요합니다.");
+		document.location.href = "/yologaza/admin/member/admin_loginForm.do";
+	}
+</script>
 </head>
 <body>
 	<div class="wrap main_wrap show">
@@ -25,11 +31,11 @@
 	      	<c:choose>
 	      		<c:when test="${isLogOn == true  && member!= null}">
 	      			<li class = cell-r><a href="#">마이페이지</a></li>
-	        		<li class = cell-r><a href="${contextPath}/adminMember/logout.do">로그아웃</a></li>
+	        		<li class = cell-r><a href="${contextPath}/admin/member/logout.do">로그아웃</a></li>
 	      		</c:when>
 	      		<c:otherwise>
-	      			<li class = cell-r><a href="${contextPath}/adminMember/memberForm.do">회원가입</a></li>
-	        		<li class = cell-r><a href="${contextPath}/adminMember/admin_loginForm.do">로그인</a></li>
+	      			<li class = cell-r><a href="${contextPath}/admin/member/memberForm.do">회원가입</a></li>
+	        		<li class = cell-r><a href="${contextPath}/admin/member/admin_loginForm.do">로그인</a></li>
 	      		</c:otherwise>
 	      	</c:choose>
 	      </ul>
@@ -44,7 +50,7 @@
 	              <div>숙박 관리</div>
 	              <div class="sub-menu-box">
 	                <ul>
-	                  <li><a href="#">검수 관리 조회</a></li>
+	                  <li><a href="${contextPath}/admin/goods/listGoods.do">검수 관리 조회</a></li>
 	                  <li><a href="#">전체 숙소 목록</a></li>
 	                  <li><a href="#">쿠폰 관리</a></li>
 	                </ul>
@@ -54,8 +60,8 @@
 	              <div>고객 및 문의 관리</div>
 	              <div class="sub-menu-box">
 	                <ul>
-	                  <li><a href="#">전체 회원 목록</a></li>
-	                  <li><a href="#">탈퇴 회원 목록</a></li>
+	                  <li><a href="${contextPath}/admin/member/listMember.do">전체 회원 목록</a></li>
+	                  <li><a href="${contextPath}/admin/member/deleteMemberList.do">탈퇴 회원 목록</a></li>
 	                </ul>
 	              </div>
 	            </li>

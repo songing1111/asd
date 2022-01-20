@@ -12,7 +12,7 @@ public class Question_VO implements Serializable{
 	private String id;
 	private String content;
 	private int auth;
-	private int type;
+	private String type;
 	private Date writeDate;
 	private String hp;
 	private String email;
@@ -36,10 +36,10 @@ public class Question_VO implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 	public int getArticleNo() {
