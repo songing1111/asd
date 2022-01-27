@@ -20,10 +20,14 @@ public class ReservationVO {
 	private String goods_motel_endtime;
 	private String goods_motel_usetime;
 	private String fileName;
+	private String reservationType;
 	private int price;
 	private Date checkIn;
 	private Date checkOut;
 	private Date rDate;
+	private String goods_room_type;
+	private String date;
+	private int sum;
 	
 	public int getRid() {
 		return rid;
@@ -130,6 +134,12 @@ public class ReservationVO {
 	public int getPrice() {
 		return price;
 	}
+	public String getReservationType() {
+		return reservationType;
+	}
+	public void setReservationType(String reservationType) {
+		this.reservationType = reservationType;
+	}
 	public void setPrice(int price) {
 		this.price = price;
 	}
@@ -150,6 +160,24 @@ public class ReservationVO {
 	}
 	public void setrDate(Date rDate) {
 		this.rDate = rDate;
+	}
+	public String getGoods_room_type() {
+		return goods_room_type;
+	}
+	public void setGoods_room_type(String goods_room_type) {
+		this.goods_room_type = goods_room_type;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public int getSum() {
+		return sum;
+	}
+	public void setSum(int sum) {
+		this.sum = sum;
 	}
 	
 }

@@ -31,6 +31,7 @@ import com.myspring.yologaza.goods.vo.GoodsVO;
 import com.myspring.yologaza.goods.vo.ImageFileVO;
 import com.myspring.yologaza.member.vo.MemberVO;
 import com.myspring.yologaza.reservation.service.ReservationService;
+import com.myspring.yologaza.reservation.vo.ReservationVO;
 import com.myspring.yologaza.sms.service.certificationService;
 
 @Controller("reservationController")
@@ -60,6 +61,7 @@ public class ReservationControllerImpl extends BaseController implements Reserva
 		long today = (System.currentTimeMillis()/1000) + 32400;
 		Date date = new Date(System.currentTimeMillis()+32400000);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String todayDate = timeFormat.format(date);
 		long date1 = 0;
 		long date2 = 0;
@@ -73,12 +75,23 @@ public class ReservationControllerImpl extends BaseController implements Reserva
 		request.setAttribute("date2", date2);
 		String Ddate1 = todayDate;
 		String Ddate2 = todayDate;
+		String Ddate3 = todayDate;
+		String Ddate4 = todayDate;
 		if(date1 != 0 && date2 != 0) {
 			Ddate1 = timeFormat.format(date1*1000);
 			Ddate2 = timeFormat.format(date2*1000);
+			Ddate3 = timeFormat2.format(date1*1000);
+			Ddate4 = timeFormat2.format(date2*1000);
+		} else if( date1 == 0 && date2 == 1) {
+			Ddate1 = timeFormat.format(today*1000);
+			Ddate2 = timeFormat.format((today+86400)*1000);
+			Ddate3 = timeFormat2.format(today*1000);
+			Ddate4 = timeFormat2.format((today+86400)*1000);
 		}
 		request.setAttribute("Ddate1", Ddate1);
 		request.setAttribute("Ddate2", Ddate2);
+		request.setAttribute("Ddate3", Ddate3);
+		request.setAttribute("Ddate4", Ddate4);
 		return mav;
 	}
 	
@@ -110,6 +123,7 @@ public class ReservationControllerImpl extends BaseController implements Reserva
 		long today = (System.currentTimeMillis()/1000) + 32400;
 		Date date = new Date(System.currentTimeMillis()+32400000);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String todayDate = timeFormat.format(date);
 		long date1 = 0;
 		long date2 = 0;
@@ -123,47 +137,69 @@ public class ReservationControllerImpl extends BaseController implements Reserva
 		request.setAttribute("date2", date2);
 		String Ddate1 = todayDate;
 		String Ddate2 = todayDate;
+		String Ddate3 = todayDate;
+		String Ddate4 = todayDate;
 		if(date1 != 0 && date2 != 0) {
 			Ddate1 = timeFormat.format(date1*1000);
 			Ddate2 = timeFormat.format(date2*1000);
+			Ddate3 = timeFormat2.format(date1*1000);
+			Ddate4 = timeFormat2.format(date2*1000);
+		} else if( date1 == 0 && date2 == 1) {
+			Ddate1 = timeFormat.format(today*1000);
+			Ddate2 = timeFormat.format((today+86400)*1000);
+			Ddate3 = timeFormat2.format(today*1000);
+			Ddate4 = timeFormat2.format((today+86400)*1000);
 		}
 		request.setAttribute("Ddate1", Ddate1);
 		request.setAttribute("Ddate2", Ddate2);
+		request.setAttribute("Ddate3", Ddate3);
+		request.setAttribute("Ddate4", Ddate4);
 		return mav;
 	}
 	@Override
 	@RequestMapping(value="/addReservation.do" ,method={RequestMethod.POST})
-	public ResponseEntity addReservation( HttpServletRequest multipartRequest, HttpServletResponse response)  throws Exception {
-		multipartRequest.setCharacterEncoding("utf-8");
+	public ResponseEntity addReservation( HttpServletRequest request, HttpServletResponse response)  throws Exception {
+		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=UTF-8");
 		String fileName=null;
 		
 		Map newGoodsMap = new HashMap();
-		Enumeration enu=multipartRequest.getParameterNames();
+		Enumeration enu=request.getParameterNames();
 		while(enu.hasMoreElements()){
 			String name=(String)enu.nextElement();
-			String value=multipartRequest.getParameter(name);
+			String value=request.getParameter(name);
 			newGoodsMap.put(name,value);
 		}
-		
 		String message = null;
 		ResponseEntity resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		
 		try {
 			reservationService.reservationResult(newGoodsMap);
 			System.out.println("실행");
 			message= "<script>";
 			message += " alert('주문내역을 저장했습니다.');";
-			message +=" location.href='"+multipartRequest.getContextPath()+"/member/nonReservation.do?name=${name}&hp=${hp}';";
+			message +=" location.href='"+request.getContextPath()+"/mypage/Mypage3.do';";
 			message +=("</script>");
 		}catch(Exception e) {
+			System.out.println("Exception실행");
 			message= "<script>";
-			message +=" location.href='"+multipartRequest.getContextPath()+"/main.do';";
+			message += " alert('주문내역을 저장했습니다.');";
+			message +=" location.href='"+request.getContextPath()+"/mypage/Mypage3.do';";
 			message +=("</script>");
 			e.printStackTrace();
 		}
 		resEntity =new ResponseEntity(message, responseHeaders, HttpStatus.OK);
 		return resEntity;
+	}
+	@Override
+	@RequestMapping(value="/removeReservation.do" ,method = RequestMethod.POST)
+	public ModelAndView removeCartGoods(@RequestParam("rid") int rid,
+			                          HttpServletRequest request, HttpServletResponse response)  throws Exception{
+		ModelAndView mav=new ModelAndView();
+		reservationService.removeReservation(rid);
+		mav.setViewName("redirect:/mypage/Mypage3.do");
+		return mav;
 	}
 }

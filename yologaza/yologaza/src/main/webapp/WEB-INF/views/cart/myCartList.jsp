@@ -173,11 +173,21 @@
 	  position:relative;
 	}
 	
-	.tab_each .reservation img{
+	.tab_each .reservation .img-box{
+	  position:relative;
 	  width:30%;
 	  height:220px;
 	  border:1px solid rgba(0,0,0,0.2);
+	  border-right: none;
 	  display:inline-block;
+	  overflow:hidden;
+	}
+	.tab_each .reservation .img-box img{
+	  position:absolute;
+	  top:50%;
+	  left:50%;
+	  transform:translate(-50%,-50%);
+	  width:100%;	  
 	}
 	
 	.tab_each .reservation .descript{
@@ -198,8 +208,27 @@
 		border-radius: 5px;
 		font-weight: bold;
 		margin-left: 10px;
+		cursor:pointer;
+	}
+	.tab_each .reservation .descript .btn{
+		float: right;
+		width:120px;
+		height:31.5px;
+		padding: 3px 5px;
+		border: 1px solid #777;
+		border-radius: 5px;
+		font-weight: bold;
+		margin-left: 10px;
+		cursor:pointer;
+		font-size:16px;
+		background:white;
 	}
 	.tab_each .reservation .descript .delete:hover{
+		color:white;
+		background:rgb(112,173,71);
+		border: 1px solid #ddd;
+	}
+	.tab_each .reservation .descript .btn:hover{
 		color:white;
 		background:rgb(112,173,71);
 		border: 1px solid #ddd;
@@ -423,6 +452,7 @@ function fn_order_all_cart_goods(){
 }
 
 </script>
+<!--  달력js -->
 
 
 </head>
@@ -450,29 +480,34 @@ function fn_order_all_cart_goods(){
             <form name="frm_order_all_cart">
 	            <ul class="tab_each" >
 		            <c:forEach var="item" items="${myGoodsList }" varStatus="cnt">
+		            
 		            <c:set var="cart_goods_qty" value="${myCartList[cnt.count-1].cart_goods_qty}" />
 				    <c:set var="cart_uid" value="${myCartList[cnt.count-1].cart_uid}" />
+				    
 			            <li class="reservation" style="margin-bottom: 20px;">
-			              <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }"><img src="${contextPath}/room_download.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&fileName=${item.fileName}" alt="숙소 이미지"/></a>
+			              <div class="img-box">
+			              <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }">
+			              	<img src="${contextPath}/room_download.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&fileName=${item.fileName}" alt="숙소 이미지"/>
+			              </a>
+			              </div>
 			              <div class="descript">
 			                <a1 style= "font-weight:bold;">${item.goods_name}</a1>
 			                <input type="checkbox" name="checked_goods"  checked  value="${item.goods_uroom }"  onClick="calcGoodsPrice(${item.goods_room_price1 },this)">
 			                <a2>${item.roadAddress}</a2>
 			                <a3>${item.goods_room_name}</a3>
-			                ${cart_uid}
-			                
-			                <div class="detail">
+			                <h3>${item.checkIn} - ${item.checkOut}</h3>
+			                <div class="detail" style = "font-weight:bold;">
 								
 								<c:choose>
 									<c:when test="${item.goods_room_price2 != 0}">
 										<span id="type">대실</span>
-										<span id="price2" style="padding-right:10px; box-sizing: border-box;">${item.goods_room_price2}원</span>
+										<span id="price2" style="padding-right:10px; box-sizing: border-box;"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${item.goods_room_price2}" />원</span>
 										<span id="type">숙박</span>
-										<span id="price1">${item.goods_room_price1}원</span>
+										<span id="price1"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${item.price}" />원</span>
 									</c:when>
 									<c:otherwise>
 										<span id="type">숙박</span>
-										<span id="price1">${item.goods_room_price1}원</span>
+										<span id="price1"><fmt:formatNumber type="number" maxFractionDigits="0"  value="${item.price}" />원</span>
 									</c:otherwise>
 								</c:choose>
 			                </div>
@@ -480,26 +515,28 @@ function fn_order_all_cart_goods(){
 			                <a class="delete" href="javascript:delete_cart_goods('${cart_uid}');"> 
 								삭제하기
 							</a>
+							<fmt:parseDate var="date3" value="${item.checkIn}" pattern="yyyy-MM-dd"/>
+					        <fmt:parseDate var="date4" value="${item.checkOut}" pattern="yyyy-MM-dd"/>
+					        <fmt:parseNumber var="dateTime3" value="${date3.time/(1000*60*60*24)}" integerOnly="true"/>
+					        <fmt:parseNumber var="dateTime4" value="${date4.time/(1000*60*60*24)}" integerOnly="true"/>
+							<!-- 날짜 변환 -->
+							<!--<c:set var="now" value="<%=new java.util.Date()%>" />
+							<c:set var="sysYear"><fmt:formatDate value="${item.checkIn}" pattern="yyyy-MM-dd" /></c:set> -->
 							<c:choose>
 								<c:when test="${item.goods_room_price2 != 0}">
-									<a class="delete" href='${contextPath}/reservation/reservationForm.do?goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1}'> 
-										숙박 예약하기
-									</a>
-									<a class="delete" href='${contextPath}/reservation/reservationForm.do?goods_uroom=${item.goods_uroom}&goods_room_price2=${item.goods_room_price2}'> 
-										대실 예약하기
-									</a>
+									<button class="btn" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.price}&date1=${dateTime3*86400+86400}&date2=${dateTime4*86400+86400}'">숙박 예약하기</button>
+									<button class="btn" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price2=${item.goods_room_price2}&date1=${dateTime3*86400}&date2=${dateTime3*86400}'">대실 예약하기</button>
 								</c:when>
 								<c:otherwise>
-									<a class="delete" href='${contextPath}/reservation/reservationForm.do?goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1}'> 
-										예약하기
-									</a>
+									<button class="btn" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.price}&date1=${dateTime3*86400+86400}&date2=${dateTime4*86400+86400}'">숙박 예약하기</button>
 								</c:otherwise>
 							</c:choose>
 							</div>
 			              </div>
 			            </li>
-			            <c:set  var="totalGoodsPrice" value="${totalGoodsPrice+item.goods_room_price1 }" />
+			            <c:set  var="totalGoodsPrice" value="${totalGoodsPrice+item.price }" />
 						<c:set  var="totalGoodsNum" value="${totalGoodsNum+1 }" />
+					
 		            </c:forEach>
 		        </ul>
           	</form>

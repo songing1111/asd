@@ -9,6 +9,7 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	String goods_type = request.getParameter("goods_type");
+	String value = request.getParameter("value");
 %>
 <!DOCTYPE html>
 <html>
@@ -17,7 +18,7 @@
 	<title>숙박 검색</title>
 	
 	<link rel="stylesheet" href="${contextPath}/resources/css/search_goods.css">
-	<!--  <script src="${contextPath}/resources/js/search_goods.js"></script>  -->
+	<!--<script src="${contextPath}/resources/js/search_goods.js"></script>-->
     <!-- 달력링크 -->
     <script type="text/javascript" src="${contextPath}/resources/js/moment.min.js"></script>
     <script type="text/javascript" src="${contextPath}/resources/js/daterangepicker.js"></script>
@@ -57,6 +58,18 @@
 			});
 	    });
 	    
+	 // YOLO가자!커뮤니티
+    	$(function(){
+		    $(".goods_list .goods_box").slice(0, 5).show(); // select the first ten
+		    $("#load").click(function(e){ // click event for load more
+		        e.preventDefault();
+		        $(".goods_list .goods_box:hidden").slice(0, 5).show(); // select next 10 hidden divs and show them
+		        if($(".goods_list .goods_box:hidden").length == 0){ // check if any hidden divs still exist
+		            alert("No more divs"); // alert if there are none left
+		        }
+		    });
+		});
+    	
     </script>
     
 	<style>
@@ -101,40 +114,54 @@
 		    left: 50%;
 		    transform: translate(-50%, -50%);
 	     }
+	     .goods_list .goods_box:nth-child(-n+5){
+	     	display:block;
+	     }
+	     .goods_list .goods_box{
+	     	display:none;
+	     }
+	     #load{
+    		color:black;
+    		width:100%;
+    		padding:5px;
+    		font-size:18px;
+    		font-weight:bold;
+    		cursor:pointer;
+    		border:none;
+    		margin-top:10px;
+    		background-color: white ;
+    		border:1px solid #ddd;
+    		box-sizing:border-box;
+    		transition: 0.1s;
+    	}
+    	#load:hover{
+    		color:white;
+    		background-color: rgb(112, 173, 71);
+    		border:1px solid rgb(112, 173, 71);
+    	}
+    	#roadAddress{
+    		color: white;
+		    width: 120px;
+		    padding: 5px;
+		    border: 1px solid rgba(0,0,0,0.1);
+		    box-sizing: border-box;
+		    font-size: 16px;
+		    background: rgba(0,0,0,0.1);
+		    position: absolute;
+		    bottom: 13px;
+    		left: 0;
+		    border-radius: 6px;
+    	}
+    	#roadAddress option{
+    		color: black;
+    		background: white;
+    	}
+    	.header-bar .text-box p{
+    		left: 0;
+   			bottom: 54px;
+    	}
 	</style>
 	
-	<script>
-	var pricelistdesc = function(url){
-
-		$.ajax({
-			type: 'get',
-			url: "${contextPath}/searchGoods.do?goods_type=<%=goods_type%>",
-			data: "",
-			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-			success: function(data) {
-				$('#searchGoods').html(data);
-			},
-			error: function(request, status, error) {
-				alert(error);
-			}
-		});
-	};
-	var priceListasc = function(url){
-
-		$.ajax({
-			type: 'get',
-			url: "${contextPath}/searchGoods.do?goods_type=<%=goods_type%>",
-			data: "",
-			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-			success: function(data) {
-				$('#searchGoods').html(data);
-			},
-			error: function(request, status, error) {
-				alert(error);
-			}
-		});
-	};
-	</script>
 </head>
 <body id="searchGoods">
 <!-- yolo가자 작성 -->
@@ -213,8 +240,24 @@
        				color:rgb(112, 173, 71);
        			}
        		</style>
-       	</c:if>			
+       	</c:if>
+		<div class="location">
+			<select id="roadAddress" name="roadAddress">
+				<option value="">전체</option>
+				<option value="서울">서울</option>
+				<option value="부산">부산</option>
+				<option value="제주">제주</option>
+				<option value="강원">강원</option>
+				<option value="경기">경기</option>
+				<option value="인천">인천</option>
+				<option value="경상">경상</option>
+				<option value="전라">전라</option>
+				<option value="충청">충청</option>
+				<option value="세종">세종</option>
+			</select>
+		</div>		
       </div>
+      
     </div>
     <div class="detail-select-box con">
 		<div class="top_menu tab_btn">
@@ -336,13 +379,38 @@
           </div>
          </section>
       </div>
+      	<c:set var="index" value="<%=value %>"/>
+		<c:if test="${index eq 'new_up'}">
+			<style>
+				.goods-wrap .search-menu > .search-box > button:nth-child(1) span{
+					font-weight:bold;
+					color:black;
+				}
+			</style>
+		</c:if>
+		<c:if test="${index eq 'higher_price'}">
+			<style>
+				.goods-wrap .search-menu > .search-box > button:nth-child(2) span{
+					font-weight:bold;
+					color:black;
+				}
+			</style>
+		</c:if>
+		<c:if test="${index eq 'lower_price'}">
+			<style>
+				.goods-wrap .search-menu > .search-box > button:nth-child(3) span{
+					font-weight:bold;
+					color:black;
+				}
+			</style>
+		</c:if>
       <div class="list_wrap">
         <div class="goods-wrap">  
           <div class="search-menu">
             <div class="search-box">
-             <button type="text" id="goods_newest" ><span><a href="javascript:search_Goods_Price('newest')">최신순</a></span></button>
-             <button type="text" id="hightPrice" ><span><a href="javascript:pricelistdesc('heaghtPrice')">높은 가격 순</span></button>
-             <button type="text" id="lowerPrice" ><span><a href="javascript:priceListasc('lowerPrice')">낮은 가격 순</a></span></button>
+             <button type="text" id="goods_newest" onclick="location.href='${contextPath}/searchGoods.do?goods_type=<%=goods_type%>&value=new_up' "><span>최신순</span></button>
+             <button type="text" id="hightPrice" onclick="location.href='${contextPath}/searchGoods.do?goods_type=<%=goods_type%>&value=higher_price' "><span>높은 가격 순</span></button>
+             <button type="text" id="lowerPrice" onclick="location.href='${contextPath}/searchGoods.do?goods_type=<%=goods_type%>&value=lower_price' "><span>낮은 가격 순</span></button>
             </div>
             <button id="btn_map" type="button" class="btn_map" onclick="pop_map_pc();">지도</button> 
           </div>
@@ -350,12 +418,7 @@
             <div class="goods_title"><h3>상품 리스트</h3></div>
             
             <ul id = "tab1" class="active">
-            	<c:if test="${index eq 'motel' || index eq 'my'}">
-	          		<h3 style ="text-align:left">모텔</h3>
-	          	</c:if>	
-           		<c:forEach var="item" items="${goodsMap.motel}" >
-           			<c:set var="index" value="<%=goods_type %>"/>
-         			<c:if test="${index eq 'motel' || index eq 'my'}">
+           		<c:forEach var="item" items="${goodsMap}" >
             		<li class="list_1 goods_menu1 goods_box">
 				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
 				        <div class="goods_picture">
@@ -369,190 +432,20 @@
 				          </div>
 				          <div class="price">
 				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
+				            	<c:set var="index" value="<%=goods_type %>"/>
+									<c:if test="${index eq 'motel'}">
+				            			<p>대실&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price2}</b></p>
+									</c:if>
+									<p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
 				            </div>
 				          </div>    
 				        </div>
 				      </a>
 				    </li>
-				    </c:if>
-				</c:forEach>
-			</ul> 
-            <ul id = "tab2" class="active">
-            	<c:if test="${index eq 'hotel' || index eq 'my'}">
-          			<h3 style ="text-align:left">호텔</h3>
-          		</c:if>
-	            <c:forEach var="item" items="${goodsMap.hotel}" >
-	            	<c:set var="index" value="<%=goods_type %>"/>
-          			<c:if test="${index eq 'hotel' || index eq 'my'}">  
-					<li class="list_1 goods_menu1 goods_box">
-				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
-				        <div class="goods_picture">
-				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-				        </div>
-				        <div class="goos_impormation">
-				          <div class="name">
-				            <strong>${item.goods_name}</strong>
-				            <p class="score"><span><em>8.2</em></p>
-				            <p>${item.roadAddress}</p>
-				          </div>
-				          <div class="price">
-				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-				            </div>
-				          </div>    
-				        </div>
-				      </a>
-				    </li>
-				    
-				    </c:if>
+				
 				</c:forEach>
 			</ul>
-			<ul id = "tab3" class="active">
-				<c:if test="${index eq 'pension' || index eq 'my'}">
-	          		<h3 style ="text-align:left">펜션</h3>
-	          	</c:if>
-	            <c:forEach var="item" items="${goodsMap.pension}" >
-	            	<c:set var="index" value="<%=goods_type %>"/>
-          			<c:if test="${index eq 'pension' || index eq 'my'}">     
-					<li class="list_1 goods_menu1 goods_box">
-				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
-				        <div class="goods_picture">
-				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-				        </div>
-				        <div class="goos_impormation">
-				          <div class="name">
-				            <strong>${item.goods_name}</strong>
-				            <p class="score"><span><em>8.2</em></p>
-				            <p>${item.roadAddress}</p>
-				          </div>
-				          <div class="price">
-				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-				            </div>
-				          </div>    
-				        </div>
-				      </a>
-				    </li>
-				    </c:if>
-				</c:forEach>
-			</ul>
-			<ul id = "tab4" class="active">
-				<c:if test="${index eq 'guestHouse' || index eq 'my'}">
-	        		<h3 style ="text-align:left">게스트하우스</h3>
-	        	</c:if>
-				<c:if test="${index eq 'resort' || index eq 'my'}">
-	          		<h3 style ="text-align:left">리조트</h3>
-	          	</c:if>
-	            <c:forEach var="item" items="${goodsMap.resort}" >
-	            	<c:set var="index" value="<%=goods_type %>"/>
-          			<c:if test="${index eq 'resort' || index eq 'my'}">  
-					<li class="list_1 goods_menu1 goods_box">
-				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
-				        <div class="goods_picture">
-				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-				        </div>
-				        <div class="goos_impormation">
-				          <div class="name">
-				            <strong>${item.goods_name}</strong>
-				            <p class="score"><span><em>8.2</em></p>
-				            <p>${item.roadAddress}</p>
-				          </div>
-				          <div class="price">
-				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-				            </div>
-				          </div>    
-				        </div>
-				      </a>
-				    </li>
-				    </c:if>
-				</c:forEach>
-			</ul>  
-			<ul id = "tab5" class="active">
-	            <c:forEach var="item" items="${goodsMap.guestHouse}" > 
-	            	<c:set var="index" value="<%=goods_type %>"/>
-          			<c:if test="${index eq 'guestHouse' || index eq 'my'}">      
-					<li class="list_1 goods_menu1 goods_box">
-				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
-				        <div class="goods_picture">
-				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-				        </div>
-				        <div class="goos_impormation">
-				          <div class="name">
-				            <strong>${item.goods_name}</strong>
-				            <p class="score"><span><em>8.2</em></p>
-				            <p>${item.roadAddress}</p>
-				          </div>
-				          <div class="price">
-				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-				            </div>
-				          </div>    
-				        </div>
-				      </a>
-				    </li>
-				    </c:if>
-				</c:forEach>
-			</ul>  
-			<ul id = "tab6" class="active">
-				<c:if test="${index eq 'camping' || index eq 'my'}">
-	          		<h3 style ="text-align:left">켐핑/글램핑</h3>
-	          	</c:if>
-	            <c:forEach var="item" items="${goodsMap.camping}" >   
-	            	<c:set var="index" value="<%=goods_type %>"/>
-          			<c:if test="${index eq 'camping' || index eq 'my'}">    
-					<li class="list_1 goods_menu1 goods_box">
-				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
-				        <div class="goods_picture">
-				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-				        </div>
-				        <div class="goos_impormation">
-				          <div class="name">
-				            <strong>${item.goods_name}</strong>
-				            <p class="score"><span><em>8.2</em></p>
-				            <p>${item.roadAddress}</p>
-				          </div>
-				          <div class="price">
-				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-				            </div>
-				          </div>    
-				        </div>
-				      </a>
-				    </li>
-				    </c:if>
-				</c:forEach>
-			</ul>
-			<ul id = "tab7" class="active">
-				<c:if test="${index eq 'hanok' || index eq 'my'}">
-	         		<h3 style ="text-align:left">한옥</h3>
-	         	</c:if>
-	            <c:forEach var="item" items="${goodsMap.hanok}" >
-	            	<c:set var="index" value="<%=goods_type %>"/>
-          			<c:if test="${index eq 'hanok' || index eq 'my'}">      
-					<li class="list_1 goods_menu1 goods_box">
-				      <a href="${contextPath}/goods/goodsInformation.do?goods_id=${item.goods_id }&date1=${date1}&date2=${date2}">
-				        <div class="goods_picture">
-				          <img src="${contextPath}/goods_download.do?goods_id=${item.goods_id}&fileName=${item.fileName}" alt="숙소 이미지"/>
-				        </div>
-				        <div class="goos_impormation">
-				          <div class="name">
-				            <strong>${item.goods_name}</strong>
-				            <p class="score"><span><em>8.2</em></p>
-				            <p>${item.roadAddress}</p>
-				          </div>
-				          <div class="price">
-				            <div class="map_html">
-				              <p>숙박&nbsp;<span class="build_badge" style="color: rgba(255,255,255,1); background-color: rgba(112, 173, 71, 1);">예약</span>&nbsp;<b>${item.goods_price1}</b></p>
-				            </div>
-				          </div>    
-				        </div>
-				      </a>
-				    </li>
-				    </c:if>
-				</c:forEach>
-			</ul>
+			<button id="load">더 보 기</button>
           </div>
         </div>
     
@@ -577,8 +470,8 @@
 		var map = new kakao.maps.Map(mapContainer, mapOption); 
 		
 		<c:set var="index" value="<%=goods_type %>"/>
-		<c:if test="${index eq 'hotel'}">  
-		<c:forEach var="item" items="${goodsMap.hotel}" >
+		<c:if test="${index eq ''}">  
+		<c:forEach var="item" items="${item.hotel}" >
 		// 주소로 좌표를 검색합니다
 		geocoder.addressSearch('${item.roadAddress}', function(result, status) {
 		

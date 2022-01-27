@@ -10,6 +10,8 @@
 		<result property="id" column="id" />
 		<result property="goods_uroom" column="goods_uroom" />
 		<result property="price" column="price" />
+		<result property="checkIn" column="checkIn" />
+		<result property="checkOut" column="checkOut" />
 		<result property="cart_goods_qty" column="cart_goods_qty" />
 		<result property="creaDatetime" column="creaDatetime" />
 	</resultMap>
@@ -52,6 +54,7 @@
 		<result property="goods_room_type" column="goods_room_type" />
 		<result property="goods_capacity" column="goods_capacity" />
 		<result property="goods_introduce" column="goods_introduce" />
+		<result property="price" column="price" />
 	</resultMap>	
 	
 	<resultMap id="imageResult" type="ImageFileVO">
@@ -72,17 +75,19 @@
 	
 	<select id="selectGoodsList" resultMap="goodsResult" parameterType="java.util.Map">
 		<![CDATA[
-			select g.*,d.fileName, s.goods_name, s.roadAddress from goods_detail g, goods_img d, goods s
+			select g.*,d.fileName, s.goods_name, s.roadAddress, c.cart_uid, c.id, c.price, c.checkIn, c.checkOut, c.creaDatetime 
+			from goods_detail g, goods_img d, goods s, yolo_cart c
 			where g.goods_uroom=d.goods_uroom
-            and g.goods_id = s.goods_id
-			and d.filetype='room'
-			and g.goods_uroom in
+            and s.goods_id = g.goods_id
+            and s.goods_id = d.goods_id
+            and g.goods_uroom = c.goods_uroom
+			and c.cart_uid in
 		]]>
 		<foreach item="item" collection="list" open="(" separator="," close=")">
-			#{item.goods_uroom}
+			#{item.cart_uid}
 		</foreach>
 		<![CDATA[
-			group by goods_uroom
+            group by c.creaDatetime
             order by goods_uroom;
 		]]>
 	</select>
@@ -100,10 +105,16 @@
 	    <![CDATA[
 		    	insert into yolo_cart(cart_uid,
 		    	                           goods_uroom,
-		    	                           id)
+		    	                           id,
+		    	                           price,
+		    	                           checkIn,
+		    	                           checkOut)
 		        				 values(#{cart_uid},
     							        #{goods_uroom},
-    							        #{id})
+    							        #{id},
+    							        #{price},
+    							        #{checkIn},
+    							        #{checkOut})
     	]]>
 	</insert>
 	

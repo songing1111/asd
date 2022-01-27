@@ -1,6 +1,5 @@
 package com.myspring.yologaza.business.goods.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import com.myspring.yologaza.goods.vo.GoodsVO;
 import com.myspring.yologaza.goods.vo.ImageFileVO;
 
 public interface BusinessGoodsDAO {
+	public int getTotalCount();
 	public int insertNewGoods(Map newGoodsMap) throws DataAccessException;
 	public int insertNewGoodsRoom(Map newGoodsRoomMap) throws DataAccessException;
 	public List<GoodsVO>selectNewGoodsList(Map condMap) throws DataAccessException;
@@ -26,4 +26,7 @@ public interface BusinessGoodsDAO {
 	public List selectAllGoodsList(String uid) throws DataAccessException;
 	public List selectAllRoomList(String goods_id) throws DataAccessException;
 	public void updateRoomInfo(Map modRoomMap) throws DataAccessException;
+	public List<GoodsVO> selectReservation(long date1, long date2, int offset, int count, String uid, int type) throws DataAccessException;
+	public List<GoodsVO> selectReservationHistory(long date1, long date2, int offset, int count, String uid, int type) throws DataAccessException;
+	public List selectSalesHistory(String uid, int term) throws DataAccessException;
 }

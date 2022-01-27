@@ -143,13 +143,14 @@
 	</style>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script type="text/javascript">
-		function adminGoodsAcess(goods_id) {
+		function adminGoodsAcess(goods_id,uid) {
 			$.ajax({
 				type : "POST",
 				async : false, //false인 경우 동기식으로 처리한다.
 				url : "${contextPath}/admin/goods/goodsAcess.do?goods_id="+goods_id,
 				data : {
-					goods_id:goods_id
+					goods_id:goods_id,
+					uid:uid
 				},
 				success: function(result){
 					swal("Good job!", "검수 승인을 완료했습니다.", "success");
@@ -197,7 +198,7 @@
 	          </div>
 	        </div>
 			<table align="center">
-			<tr align="center" class="column" style="font-size:14px;">
+			<tr align="center" class="column" style="font-size:12px;">
 				<td ><b>업체명</b></td>
 				<td ><b>예약페이지 이동</b></td>
 				<td ><b>주소</b></td>
@@ -226,14 +227,14 @@
 							<button disabled>검수 완료</button>
 						</c:when>
 						<c:otherwise>
-							<button><a href="javascript:adminGoodsAcess('${goodsList.goods_id}')">검수 확인</a></button>
+							<button><a href="javascript:adminGoodsAcess('${goodsList.goods_id}','${goodsList.uid}')">검수 확인</a></button>
 						</c:otherwise>
 					</c:choose>
 					</td>
 					<td>${goodsList.goods_creDate}</td>
 					<td>
-						<button type="button" class="next"  onclick="location.href='${contextPath}/business/goods/viewNewGoods.do?goods_id=${goodsList.goods_id}'">상세 검색</button>
-						<button type="button" class="next" style="margin-top:9px;" onclick="location.href='${contextPath}/business/goods/listRoom.do?goods_id=${goodsList.goods_id}'">객실 관리</button>
+						<button type="button" class="next" style="display:block;"  onclick="location.href='${contextPath}/business/goods/viewNewGoods.do?goods_id=${goodsList.goods_id}'">상세 검색</button>
+						<button type="button" class="next" style="margin-top:9px;" onclick="location.href='${contextPath}/business/goods/listRoom.do?goods_id=${goodsList.goods_id}'">객실 검색</button>
 					</td>
 				</tr>
 			</c:forEach>   

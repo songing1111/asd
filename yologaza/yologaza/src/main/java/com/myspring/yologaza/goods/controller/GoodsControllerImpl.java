@@ -36,7 +36,6 @@ import net.sf.json.JSONObject;
 public class GoodsControllerImpl extends BaseController implements GoodsController {
 	@Autowired
 	private GoodsService goodsService;
-	
 	@Autowired
 	private static final String ARTICLE_IMAGE_REPO = "C:\\board\\article_image";
 	@Autowired
@@ -68,6 +67,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		long today = (System.currentTimeMillis()/1000) + 32400;
 		Date date = new Date(System.currentTimeMillis()+32400000);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat timeFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String todayDate = timeFormat.format(date);
 		long date1 = 0;
 		long date2 = 0;
@@ -81,34 +81,45 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		request.setAttribute("date2", date2);
 		String Ddate1 = todayDate;
 		String Ddate2 = todayDate;
+		String Ddate3 = todayDate;
+		String Ddate4 = todayDate;
 		if(date1 != 0 && date2 != 0) {
 			Ddate1 = timeFormat.format(date1*1000);
 			Ddate2 = timeFormat.format(date2*1000);
+			Ddate3 = timeFormat2.format(date1*1000);
+			Ddate4 = timeFormat2.format(date2*1000);
+		} else if( date1 == 0 && date2 == 1) {
+			Ddate1 = timeFormat.format(today*1000);
+			Ddate2 = timeFormat.format((today+86400)*1000);
+			Ddate3 = timeFormat2.format(today*1000);
+			Ddate4 = timeFormat2.format((today+86400)*1000);
 		}
 		request.setAttribute("Ddate1", Ddate1);
 		request.setAttribute("Ddate2", Ddate2);
+		request.setAttribute("Ddate3", Ddate3);
+		request.setAttribute("Ddate4", Ddate4);
 		
 		return mav;
 	}
 	@Override
 	@RequestMapping(value = {"/searchGoods"},method={RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView searchGoods(@RequestParam("goods_type") String goods_type,
-			HttpServletRequest request, HttpServletResponse response) throws Exception{
-		HttpSession session;
+	public ModelAndView searchGoods(GoodsVO goodsVO,
+									HttpServletRequest request, 
+									HttpServletResponse response) throws Exception{
 		ModelAndView mav=new ModelAndView();
 		String viewName=(String)request.getAttribute("viewName");
 		mav.setViewName(viewName);
 		Map<String, Object> param = new HashMap<String, Object>();
 		
+		HttpSession session=request.getSession();
 		
-		session=request.getSession();
-		
-		Map<String,List<GoodsVO>> goodsMap=goodsService.listGoods();
+		List<GoodsVO> goodsMap=goodsService.listGoods(goodsVO);
 		mav.addObject("goodsMap", goodsMap);
 		
 		long today = (System.currentTimeMillis()/1000) + 32400;
 		Date date = new Date(System.currentTimeMillis()+32400000);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat timeFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String todayDate = timeFormat.format(date);
 		long date1 = 0;
 		long date2 = 0;
@@ -122,26 +133,38 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		request.setAttribute("date2", date2);
 		String Ddate1 = todayDate;
 		String Ddate2 = todayDate;
+		String Ddate3 = todayDate;
+		String Ddate4 = todayDate;
 		if(date1 != 0 && date2 != 0) {
 			Ddate1 = timeFormat.format(date1*1000);
 			Ddate2 = timeFormat.format(date2*1000);
+			Ddate3 = timeFormat2.format(date1*1000);
+			Ddate4 = timeFormat2.format(date2*1000);
+		} else if( date1 == 0 && date2 == 1) {
+			Ddate1 = timeFormat.format(today*1000);
+			Ddate2 = timeFormat.format((today+86400)*1000);
+			Ddate3 = timeFormat2.format(today*1000);
+			Ddate4 = timeFormat2.format((today+86400)*1000);
 		}
 		request.setAttribute("Ddate1", Ddate1);
 		request.setAttribute("Ddate2", Ddate2);
+		request.setAttribute("Ddate3", Ddate3);
+		request.setAttribute("Ddate4", Ddate4);
 		
 		return mav;
 	}
 	
 	@Override
 	@RequestMapping(value = {"/goods/keywordSearchGoods.do"},method={RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView kewordSearchGoods(@RequestParam("searchWord") String searchWord, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView kewordSearchGoods(@RequestParam("searchWord") String searchWord, 
+			GoodsVO goodsVO,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		HttpSession session;
 		ModelAndView mav=new ModelAndView();
 		String viewName=(String)request.getAttribute("viewName");
 		mav.setViewName(viewName);
 		List<GoodsVO> goodsList=goodsService.searchGoods(searchWord);
 		session=request.getSession();
-		Map<String,List<GoodsVO>> goodsMap=goodsService.listGoods();
+		List<GoodsVO> goodsMap=goodsService.listGoods(goodsVO);
 		mav.addObject("goodsMap", goodsMap);
 		mav.addObject("goodsList", goodsList);
 		return mav;

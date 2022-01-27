@@ -15,6 +15,12 @@
   <meta charset="UTF-8">
 <title>비지니스헤더</title>
 <link href="${contextPath}/resources/css/header.css" rel="stylesheet" type="text/css" media="screen">
+	<style>
+		#business_header .sub-menu-box ul li:hover{
+			color:rgb(52, 152, 219);
+			font-weight:bold;
+		}
+	</style>
 </head>
 <body>
 	<div class="wrap main_wrap show">
@@ -55,10 +61,10 @@
 	              <div>예약관리</div>
 	              <div class="sub-menu-box">
 	                <ul>
-	                  <li><a href="#">예약 관리</a></li>
-	                  <li><a href="#">예약 내역</a></li>
+	                  <li><a href="${contextPath}/business/goods/reservationManagement.do">예약 관리</a></li>
+	                  <li><a href="${contextPath}/business/goods/reservationHistory.do">예약 내역</a></li>
 	                  <li><a href="#">정산 내역</a></li>
-	                  <li><a href="#">매출 내역</a></li>
+	                  <li><a href="${contextPath}/business/goods/salesHistory.do">매출 내역</a></li>
 	                </ul>
 	              </div>
 	            </li>

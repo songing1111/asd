@@ -7,10 +7,11 @@ import org.springframework.dao.DataAccessException;
 
 import com.myspring.yologaza.goods.vo.GoodsVO;
 import com.myspring.yologaza.goods.vo.ImageFileVO;
+import com.myspring.yologaza.reservation.vo.ReservationVO;
 
 public interface GoodsDAO {
 
-	public List<GoodsVO> selectGoodsList(String goods_type ) throws DataAccessException;
+	public List<GoodsVO> selectGoodsList(GoodsVO goodsVO ) throws DataAccessException;
 
 	public GoodsVO selectGoodsDetail(String goods_id) throws DataAccessException;
 
