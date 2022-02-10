@@ -11,6 +11,7 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	String goods_id = request.getParameter("goods_id");
+	
 	String date1 = request.getParameter("date1");
 	String date2 = request.getParameter("date2");
 %>
@@ -24,13 +25,26 @@
 	    top: 50%;
 	    transform: translateY(-50%);
 	}
+	#tab2 label{
+		cursor:pointer;
+	}
+	
+	#tab2 .room-pic-theme{
+		display: block;
+	    width: 20%;
+	    text-align: center;
+	    float:left;
+	    padding: 10px;
+	    box-sizing: border-box;
+	}
+	
 </style>
 <!DOCTYPE html>
-<html lang="ko">
 <head>
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6cf929ac0c936c4cda3566648aaf3dc4&libraries=services"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
-	<script>
+	<script type="text/javascript">
 		function fn_articleForm(isLogOn,articleForm,loginForm){
 		  if(isLogOn != '' && isLogOn != 'false'){
 		    location.href=articleForm;
@@ -104,7 +118,7 @@
 			}
 		}
 	    
-	    
+
 	    $(function() {
 	    	  $('.tab_each #tab1 .room .room-box .room-select img').click(function(){
 	    	    var idx = $(".tab_each #tab1 .room .room-box .room-select img").index(this)
@@ -115,7 +129,9 @@
 	    	      $('#tab1 .room-box-wrap').eq(idx).hide();
 	    	    }
 	    	});
+    	 
 	    	});
+	    
     </script>
     <style>
     	#tab1 .room-box-wrap{
@@ -225,6 +241,27 @@
 		    box-sizing: border-box;
 		    right: -60px;
 	     }
+	     .room_img_box{
+	     	max-height: 300px;
+	     }
+	     .nonResBtn{
+	     	display:block;
+	     	cursor:pointer;
+	     }
+	     .tab_each ul li .room-box .room-text .reserve .nonResDate{
+	     	position: absolute;
+		    top: 0;
+		    right: -250px;
+		    visibility: hidden;
+		    width: 240px;
+		    padding: 10px;
+		    height: auto;
+		    border: 2px solid #ddd;
+		    box-sizing: border-box;
+	     }
+	     .tab_each ul li .room-box .room-text:hover .reserve .nonResDate{
+	     	visibility: visible;
+	     }
     </style>
     <!--  달력js -->
     <script>
@@ -242,6 +279,7 @@
 	        });
 	
 	    });
+	    
     </script>
     
 </head>
@@ -318,24 +356,24 @@
 							      	<img src="${contextPath}/room_download.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&fileName=${item.fileName}" alt="룸 사진">
 							      </div>
 							      <div class="room-text cell-r">
-							        <div class="reserve cell">							        
+							        <div class="reserve cell">				        
 							          <c:choose>
 								          <c:when test="${date1==0}">
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:when>
 								          <c:when test="${Ddate1 == Ddate2}">
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:when>
 								          <c:otherwise>
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1 *(date2-date1-1)/86400}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1 *(date2-date1-1)/86400}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:otherwise>
-							          </c:choose>							         
+							          </c:choose>				         
 							          <h3>대실</h3>
-							          <br><br><br>
+							          <br>
 							          <div class="price"><h2><fmt:formatNumber type="number" maxFractionDigits="0"  value="${item.goods_room_price2}" />원</h2></div>
 							          <div style="float:left; font-size:14px;">${Ddate3}</div>
-							          <div><span style="float: left">마감시간</span><span style="float: right">${item.goods_motel_endtime}시까지</span></div>
-							          <div><span style="float: left">이용시간최대</span><span style="float: right"> ${item.goods_motel_usetime}시간</span></div>
+							          <div><span style="float: left">마감시간</span><span style="float: right">${goods.goods_motel_endtime}시까지</span></div>
+							          <div><span style="float: left">이용시간최대</span><span style="float: right"> ${goods.goods_motel_usetime}시간</span></div>
 							          <div class="point">
 							          	<button type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price2=${item.goods_room_price2}&date1=<%=date1%>&date2=<%=date1%>'">예약하기</button>
 							          </div>
@@ -343,17 +381,17 @@
 							        <div class="reserve cell">
 							          <c:choose>
 								          <c:when test="${date1==0}">
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:when>
 								          <c:when test="${Ddate1 == Ddate2}">
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:when>
 								          <c:otherwise>
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1 *(date2-date1-1)/86400}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1 *(date2-date1-1)/86400}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:otherwise>
 							          </c:choose>
 							          <h3>숙박</h3>
-							          <br><br><br>
+							          <br>
 							          <div class="price">
 								          <h2>
 								          
@@ -384,13 +422,41 @@
 							          <div><span style="float: left">퇴실시간</span>
 							            <span style="float: right">익일${item.goods_checkOut}시</span></div>
 							          <div class="point">
+							          
+							 			<div class="nonResDate">
+							 			<div class="nonResBtn">실시간 예약 현황</div>
+										<c:forEach var="resCheck" items="${reservationCheck}">
+											
+											
+											<c:choose>
+												<c:when test="${item.goods_uroom == resCheck.goods_uroom}">
+													<div>${resCheck.checkIn} - ${resCheck.checkOut}</div>
+												</c:when>
+											</c:choose>
+											
+											<c:if test="${item.goods_uroom == resCheck.goods_uroom}">
+											<c:choose>	
+									          	<c:when test="${(Ddate3 <= resCheck.checkIn && resCheck.checkIn <= Ddate4)||(Ddate3 <= resCheck.checkOut && resCheck.checkOut <= Ddate4)||(resCheck.checkIn <= Ddate3 && Ddate4 <= resCheck.checkOut)}">
+									          		<c:set var="resOnBtn" value="${item.goods_uroom}" />
+									          	</c:when>
+									    		<c:otherwise>
+									    		</c:otherwise>
+									         </c:choose>
+									         </c:if>
+									         
+										</c:forEach>
+										</div>
 								          <c:set var="index" value="${date1}"/>
-									      <c:if test="${index != 0}">
-								          	<button type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1 *(date2-date1-1)/86400}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
-							          	  </c:if>
-								          <c:if test="${index == 0}">
-								          	<button type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
+									      <c:if test="${index != 0 && resOnBtn != item.goods_uroom}">
+								          	<button id="${item.goods_uroom}" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1 *(date2-date1-1)/86400}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
+							          	  </c:if> 
+								          <c:if test="${index == 0 && resOnBtn != item.goods_uroom}">
+								          	<button id="${item.goods_uroom}" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
 								          </c:if>
+								          <c:if test="${resOnBtn == item.goods_uroom}">
+								          	<button id="${item.goods_uroom}" style="background:#777;" type="button" " disabled>예약방 없음</button>
+								          </c:if>
+								         
 							          </div>
 							        </div>
 							      </div>
@@ -429,17 +495,17 @@
 							        <div class="reserve cell" style="width:100%; border-right:none;">
 							          <c:choose>
 								          <c:when test="${date1==0}">
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:when>
 								          <c:when test="${Ddate1 == Ddate2}">
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:when>
 								          <c:otherwise>
-								          	<h2>${item.goods_room_name}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1 *(date2-date1-1)/86400}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
+								          	<h2>${item.goods_room_type}<a href="javascript:add_cart('${item.goods_uroom}','${item.goods_room_price1 *(date2-date1-1)/86400}','${Ddate3}','${Ddate4}')" style="float:right; color:rgba(192, 57, 43, 0.7);"><i class="fas fa-shopping-cart"></i></a></h2>
 								          </c:otherwise>
 							          </c:choose>
 							          <h3>숙박</h3>
-							          <br><br><br>
+							          <br>
 							          <div class="price">
 										<h2>
 								          <c:set var="index" value="<%=date1 %>"/>
@@ -467,14 +533,43 @@
 							          </div>
 							          <div><span style="float: left">입실시간</span> <span style="float: right">${item.goods_checkIn}시부터</span></div>
 							          <div><span style="float: left">퇴실시간</span> <span style="float: right">익일${item.goods_checkOut}시</span></div>
+							          
 							          <div class="point">
-							          <c:set var="index" value="${date1}"/>
-								      <c:if test="${index != 0}">
-							          	<button type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1 *(date2-date1-1)/86400}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
-						          	  </c:if> 
-							          <c:if test="${index == 0}">
-							          	<button type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
-							          </c:if>
+							          
+							 			<div class="nonResDate">
+							 			<div class="nonResBtn">실시간 예약 현황</div>
+										<c:forEach var="resCheck" items="${reservationCheck}">
+											
+											
+											<c:choose>
+												<c:when test="${item.goods_uroom == resCheck.goods_uroom}">
+													<div>${resCheck.checkIn} - ${resCheck.checkOut}</div>
+												</c:when>
+											</c:choose>
+											
+											<c:if test="${item.goods_uroom == resCheck.goods_uroom}">
+											<c:choose>	
+									          	<c:when test="${(Ddate3 <= resCheck.checkIn && resCheck.checkIn <= Ddate4)||(Ddate3 <= resCheck.checkOut && resCheck.checkOut <= Ddate4)||(resCheck.checkIn <= Ddate3 && Ddate4 <= resCheck.checkOut)}">
+									          		<c:set var="resOnBtn" value="${item.goods_uroom}" />
+									          	</c:when>
+									    		<c:otherwise>
+									    		</c:otherwise>
+									         </c:choose>
+									         </c:if>
+									         
+										</c:forEach>
+										</div>
+								          <c:set var="index" value="${date1}"/>
+									      <c:if test="${index != 0 && resOnBtn != item.goods_uroom}">
+								          	<button id="${item.goods_uroom}" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1 *(date2-date1-1)/86400}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
+							          	  </c:if> 
+								          <c:if test="${index == 0 && resOnBtn != item.goods_uroom}">
+								          	<button id="${item.goods_uroom}" type="button" onclick="location.href='${contextPath}/reservation/reservationForm.do?goods_id=${item.goods_id}&goods_uroom=${item.goods_uroom}&goods_room_price1=${item.goods_room_price1}&date1=<%=date1%>&date2=<%=date2%>' ">예약하기</button>
+								          </c:if>
+								          <c:if test="${resOnBtn == item.goods_uroom}">
+								          	<button id="${item.goods_uroom}" style="background:#777;" type="button" " disabled>예약방 없음</button>
+								          </c:if>
+								         
 							          </div>
 							        </div>
 							      </div>
@@ -489,6 +584,7 @@
 								        			<div class="content cell slick-slide" style="width: 962px;height: 500px;margin-bottom: 50px;overflow: hidden;">
 								        				<img src="${contextPath}/room_download.do?goods_id=${itemRoom.goods_id}&goods_uroom=${itemRoom.goods_uroom}&fileName=${itemRoom.fileName}" alt="객실 이미지">
 								        			</div>
+								        			
 												</c:when>
 											</c:choose>
 										</c:forEach>
@@ -510,6 +606,7 @@
                     <input type="checkbox" class="room-search" id="room-3">
                     <label for="room-3">기본정보</label>
                     <div class="room-pic" id="room-pic-3">${goods.goods_baseImpormation}</div>
+                    
                   </li>
                   <li>
                     <input type="checkbox" class="room-search" id="room-4">
@@ -519,9 +616,22 @@
                   <li>
                     <input type="checkbox" class="room-search" id="room-5">
                     <label for="room-5">테마</label>
-                    <div class="room-pic" id="room-pic-5">테마 기제</div>
+                    <div class="room-pic room-pic-themes row" id="room-pic-5">
+						<span>
+						<c:forTokens var="yoloTheme" items="${goods.yolo_theme}" delims = " ">
+		               		<span class="room-pic-theme">
+		               			<span style="display: block;">
+		               			 <img style="width:30%;" src="${contextPath}/resources/image/theme-icon/${yoloTheme}.png" alt="service_image">
+		               			</span>
+		               			<strong style="color:#777;">${yoloTheme}</strong>
+		               		</span>
+		               	</c:forTokens>
+		               	</span>
+					</div>
+					
                   </li>
                 </ul>
+                
                 <ul id="tab3">
                   <table align="center" width="100%" style="margin-top:20px;"  >
 					  <tr height="10" align="center" style="height:30px; color:white; font-weight:bold; background-color:rgb(112, 173, 71);">
@@ -610,5 +720,5 @@
 			</div>
 		  </div>
 	  </div>
+	
 </body>
-</html>

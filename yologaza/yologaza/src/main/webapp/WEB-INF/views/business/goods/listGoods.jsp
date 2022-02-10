@@ -58,6 +58,15 @@
 			border-radius:10px;
 		}
 	</style>
+	<script>
+	if(("${member.auth}" == "1") && ("${isLogOn}" == "true")){
+		alert("사업자 권한이 필요합니다.");
+		document.location.href = "/yologaza/business_main.do";
+	}else if(('${member}' == '') || ('${member}' == null)){
+		alert("로그인이 필요합니다.");
+		document.location.href = "/yologaza/businessMember/business_loginForm.do";
+	}
+	</script>
 </head>
 <body>
 <div id="admin_main" class="admin_main_wrap">
@@ -80,9 +89,9 @@
 			<c:forEach var="goodsList" items="${listGoodsMap.goodsList}" > 
 				<tr align="center" style="box-shadow: 0px 3px #ddd; font-size:14px;">
 					
-					<td>${goodsList.goods_name}</td>
+					<td style="width:13%;">${goodsList.goods_name}</td>
 					<td><a href="${contextPath}/goods/goodsInformation.do?goods_id=${goodsList.goods_id }"><img src="${contextPath}/goods_thumbnails.do?goods_id=${goodsList.goods_id}&fileName=${goodsList.fileName}" alt="숙박정보 사진"></a></td>
-					<td width="40%">${goodsList.roadAddress}<br>${goodsList.namujiAddress}</td>
+					<td width="30%">${goodsList.roadAddress}<br>${goodsList.namujiAddress}</td>
 					<td>${goodsList.goods_type}</td>
 					<td>
 					<c:choose>

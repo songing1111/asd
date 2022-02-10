@@ -27,20 +27,24 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myspring.yologaza.common.interceptor.ViewNameInterceptor;
+import com.myspring.yologaza.goods.vo.GoodsVO;
+import com.myspring.yologaza.loginApi.service.KakaoService;
 import com.myspring.yologaza.member.service.MemberService;
 import com.myspring.yologaza.member.vo.MemberVO;
 import com.myspring.yologaza.sms.service.certificationService;
 
 @Controller("memberController")
+@RequestMapping(value="/member")
 public class MemberControllerImpl extends ViewNameInterceptor implements MemberController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberControllerImpl.class);
 	@Autowired
 	private MemberService memberService;
 	@Autowired
 	MemberVO memberVO;
-	
+	@Autowired
+	private KakaoService kakaoService;
 	@Override
-	@RequestMapping(value="/member/listMembers.do", method=RequestMethod.GET)
+	@RequestMapping(value="/listMembers.do", method=RequestMethod.GET)
 	public ModelAndView listMembers(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//String viewName = getViewName(request);
 		String viewName = (String)request.getAttribute("viewName");
@@ -54,7 +58,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		return mav;
 	}
 	@Override
-	@RequestMapping(value="/member/addMember.do", method=RequestMethod.POST)
+	@RequestMapping(value="/addMember.do", method=RequestMethod.POST)
 	public ResponseEntity addMember(@ModelAttribute("memberVO") MemberVO _memberVO,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("text/html; charset=UTF-8");
@@ -82,7 +86,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		return resEntity;
 	}
 	
-	@RequestMapping(value = {"/member/loginForm.do", "/member/logoutForm.do"}, method= {RequestMethod.POST, RequestMethod.GET} )
+	@RequestMapping(value = {"/loginForm.do", "/logoutForm.do"}, method= {RequestMethod.POST, RequestMethod.GET} )
 	//@RequestMapping(value="/member/*Form.do", method=RequestMethod.GET)
 	public ModelAndView form(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = getViewName(request);
@@ -93,7 +97,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	
 
 	@Override
-	@RequestMapping(value = "/member/login.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
 	public ModelAndView login(@ModelAttribute("member") MemberVO member,
 							RedirectAttributes rAttr,
 							HttpServletRequest request, 
@@ -123,12 +127,54 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		}
 		return mav;
 	}
+	
+	// kakaoLogin
+	@Override
+	@RequestMapping(value="/kakaologin", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView login(@ModelAttribute("member") MemberVO member,
+    						@RequestParam(value = "code", required = false) String code,
+    						RedirectAttributes rAttr,
+							HttpServletRequest request, 
+							HttpServletResponse response) throws Exception {
+	 ModelAndView mav = new ModelAndView();
+	 System.out.println("code: " + code); 
+	 String access_token = kakaoService.getAccessToken(code); 
+	 System.out.println("access_token" + access_token); 
+	 HashMap<String,Object> userInfo = kakaoService.getUserInfo(access_token); 
+	 
+	 System.out.println(userInfo);
+	 HttpSession session = request.getSession();
+	 
+	 if(userInfo != null) {
+	        session.setAttribute("member", userInfo);
+			session.setAttribute("isLogOn", true);
+			String action = (String)session.getAttribute("action");
+			session.removeAttribute("action");
+			if(action != null) {
+				mav.setViewName("redirect:action");
+			} else {
+				mav.setViewName("redirect:/main.do");
+			}
+		} else if(userInfo.get("id") == null || userInfo.get("id") == "") {
+			rAttr.addAttribute("result", "idFailed");
+			mav.setViewName("redirect:/member/loginForm.do");
+		} else {
+			rAttr.addAttribute("result", "loginFailed");
+			mav.setViewName("redirect:/member/loginForm.do");
+		}
+	 	System.out.println("###access_Token#### : " + access_token);
+		System.out.println("###nickname#### : " + userInfo.get("name"));
+		System.out.println("###email#### : " + userInfo.get("email"));
+	 return mav;
+
+    }
 
 	@Override
-	@RequestMapping(value = "/member/logout.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/logout.do", method = {RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView logout(HttpServletRequest request,
 								HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
+		
 		session.removeAttribute("member");
 		session.removeAttribute("isLogOn");
 		ModelAndView mav = new ModelAndView();
@@ -137,7 +183,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	}
 	
 	// 아이디 찾기
-	@RequestMapping(value="/member/findIdView", method=RequestMethod.GET)
+	@RequestMapping(value="/findIdView", method=RequestMethod.GET)
 	public ModelAndView findIdView(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String viewName = getViewName(request);
 		ModelAndView mav = new ModelAndView();
@@ -145,21 +191,33 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		return mav;
 	}
 	
-	@RequestMapping(value="/member/findId", method=RequestMethod.POST)
-	public String findId(MemberVO memberVO, Model model) throws Exception{
-		logger.info("hp"+memberVO.getHp());
-				
-		if(memberService.findIdCheck(memberVO.getHp())==0) {
-			model.addAttribute("msg", "핸드폰번호를 확인해주세요");
-			return "/member/findIdView";
-		}else {
-			model.addAttribute("member", memberService.findId(memberVO.getHp()));
-			return "/member/findId";
+	@RequestMapping(value="/findId", method=RequestMethod.POST)
+	public ModelAndView findId(MemberVO memberVO, Model model,
+							HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String name = memberVO.getName();
+		String hp = memberVO.getHp();
+		MemberVO member = memberService.findIdCheck(memberVO);
+		if(name == null || name == "") {
+			model.addAttribute("msg", "이름을 확인해주세요.");
+			ModelAndView mav = new ModelAndView("/member/findIdView");
+			return mav;
+		} else if(hp == null || hp == ""){
+			model.addAttribute("msg", "핸드폰번호를 확인해주세요.");
+			ModelAndView mav = new ModelAndView("/member/findIdView");
+			return mav;
+		} else if(member==null) {
+			model.addAttribute("msg", "가입된 아이디가 아닙니다.");
+			ModelAndView mav = new ModelAndView("/member/findIdView");
+			return mav;
+		} else {
+			model.addAttribute("member", memberService.findId(memberVO));
+			ModelAndView mav = new ModelAndView("/member/findId");
+			return mav;
 		}
 	}
 	
 	// 비밀번호 재설정
-	@RequestMapping(value="/member/findPwView" , method=RequestMethod.GET)
+	@RequestMapping(value="/findPwView" , method=RequestMethod.GET)
 	public ModelAndView findPwView(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String viewName = getViewName(request);
 		ModelAndView mav = new ModelAndView();
@@ -167,7 +225,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		return mav;
 	}
 		
-	@RequestMapping(value="/member/findPw", method=RequestMethod.GET)
+	@RequestMapping(value="/findPw", method=RequestMethod.GET)
 	public String findPw(MemberVO memberVO,Model model) throws Exception{
 		logger.info("memberPw"+memberVO.getId());
 		
@@ -183,7 +241,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	}
 	
 	@Override
-	@RequestMapping(value="/member/removeMember.do", method = RequestMethod.POST)
+	@RequestMapping(value="/removeMember.do", method = RequestMethod.POST)
 	public ModelAndView removeMember(MultipartHttpServletRequest multipartRequest, HttpServletResponse response)throws Exception{
 		multipartRequest.setCharacterEncoding("utf-8");
 		Map<String,Object> articleMap = new HashMap<String, Object>();
@@ -205,7 +263,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 		return mav;
 	}
 	
-	@RequestMapping(value="/member/*Form.do", method={RequestMethod.POST,RequestMethod.GET})
+	@RequestMapping(value="/*Form.do", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView form(@RequestParam(value="result", required=false) String result,
 							@RequestParam(value= "action", required=false) String action,
 								HttpServletRequest request, 
@@ -221,7 +279,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	}
 	
 	@Override
-	@RequestMapping(value= "/member/QuitForm.do", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value= "/QuitForm.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView quit(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String viewName = (String)request.getAttribute("viewName");
 		HttpSession session = request.getSession();
@@ -233,7 +291,7 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	}
 	
 	@Override
-	@RequestMapping(value="/member/overlapped.do" ,method = RequestMethod.POST)
+	@RequestMapping(value="/overlapped.do" ,method = RequestMethod.POST)
 	public ResponseEntity overlapped(@RequestParam("id") String id,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		ResponseEntity resEntity = null;
 		String result = memberService.overlapped(id);
@@ -242,15 +300,12 @@ public class MemberControllerImpl extends ViewNameInterceptor implements MemberC
 	}
 
 	@Override
-	@RequestMapping(value = "/member/phoneCheck", method = RequestMethod.GET)
+	@RequestMapping(value = "/phoneCheck", method = RequestMethod.GET)
 	@ResponseBody
 	public String sendSMS(@RequestParam("phone") String userPhoneNumber) {
 		int randomNumber = (int)((Math.random()* (9999 - 1000 + 1)) + 1000);
 		certificationService.certifiedPhoneNumber(userPhoneNumber,randomNumber);
 		return Integer.toString(randomNumber);
 	}
-	
-
-	
-	
+		
 }

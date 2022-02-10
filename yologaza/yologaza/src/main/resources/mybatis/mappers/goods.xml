@@ -96,8 +96,11 @@
 				        	<when test="roadAddress == '전라'">
 				        		and roadAddress like '전라%'
 				        	</when>
-				        	<when test="roadAddress == '충청'">
-				        		and roadAddress like '충청%'
+				        	<when test="roadAddress == '대전'">
+				        		and roadAddress like '대전%'
+				        	</when>
+				        	<when test="roadAddress == '충남'">
+				        		and roadAddress like '충남%'
 				        	</when>
 				        	<when test="roadAddress == '세종'">
 				        		and roadAddress like '세종%'
@@ -171,7 +174,7 @@
 	    <![CDATA[
 				select t.*
 					from(
-					select g.goods_id,g.goods_uroom,g.goods_room_num ,d.fileName,d.fileType from goods_detail g, goods_img d
+					select g.goods_id,g.goods_uroom, d.fileName,d.fileType from goods_detail g, goods_img d
 					where g.goods_uroom=d.goods_uroom 
 				    and d.fileType like 'room%'
 				    and d.goods_id=#{goods_id}
@@ -184,8 +187,8 @@
 	    <![CDATA[
 	    select goods_name, roadAddress from goods
         where         
-        goods_name like concat('%',#{keyword},'%') or
-        roadAddress like concat('%',#{keyword},'%')
+        goods_name like concat('%',#{keyword},'%') 
+        or roadAddress like concat('%',#{keyword},'%')
         order by goods_creDate desc
 		]]>
 	</select>
@@ -195,7 +198,8 @@
 			select g.*,i.fileName from goods g, goods_img i
 		    where g.goods_id=i.goods_id
 		    and i.fileType='goods'
-		    and g.goods_name like concat('%',#{searchWord},'%')
+		    and (g.goods_name like concat('%',#{searchWord},'%')
+		    or g.roadAddress like concat('%',#{searchWord},'%'))
             group by g.goods_id
 		    order by g.goods_creDate desc;
 		]]>

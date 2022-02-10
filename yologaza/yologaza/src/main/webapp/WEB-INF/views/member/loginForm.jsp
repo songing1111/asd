@@ -7,9 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 <c:set var="result" value="${param.result }" />
-<%
-   request.setCharacterEncoding("UTF-8");
-%>     
+     
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,16 +44,10 @@
 	<img src="${contextPath}/resources/image/yolo-logo-c.png" alt="yolo가자 로고" style="margin-top:60px; margin-bottom:30px; width:270px;">
 	<form id="frmLogin" name="frmLogin" method="post"  action="${contextPath}/member/login.do">
 	  <h1>회원로그인</h1><br>
-	    <button type="button" id="kakao-login-btn" class="btn_start-btn_kakao" data-device-type="w">
+	    <button type="button" id="kakao-login-btn" class="btn_start-btn_kakao" data-device-type="w" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=53670056b11ef5a86e82087f6eccf7d9&redirect_uri=http://localhost:8080/yologaza/member/kakaologin&response_type=code'">
 	      <span>
 	        <img class="icon-ic_login_kakao" src="${contextPath}/resources/image/ico-kakao.svg" alt="카카오 로고">
 	        <p>카카오톡 로그인</p> 
-	      </span>
-	    </button>
-	    <button type="button" id="facebook-login-btn" class="btn_start-btn_fb">
-	      <span>
-	        <img class="icon-ic_login_facebook" src="${contextPath}/resources/image/ico-facebook.svg" alt="페이스북 로고">
-	        <p>페이스북 로그인</p> 
 	      </span>
 	    </button>
 	    <button type="button" id="naver-login-btn" class="btn_start-btn_naver">

@@ -17,6 +17,11 @@
 	    left: 50%;
 	    transform: translate(-50%, -50%);
 	}
+	#toggleBtn:checked ~ #toggleBtnOn{
+		color: white;
+		padding: 6px;
+    	box-sizing: border-box;
+	}
 </style>
 <meta charset="UTF-8">
 <title>헤더</title>
@@ -42,6 +47,12 @@
 				color:rgb(112, 173, 71);
 				font-weight:bold;
 			}
+			
+			#toggleBtnOn::placeholder{
+				color:white;
+				opacity: 1;
+			
+			}
 	</style>
 	<script type="text/javascript">
 		var loopSearch=true;
@@ -52,7 +63,7 @@
 			$.ajax({
 				type : "get",
 				async : true, //false인 경우 동기식으로 처리한다.
-				url : "${contextPath}/goods/keywordSearch.do",
+				url : "${contextPath}/keywordSearch.do",
 				data : {keyword:value},
 				success : function(data, textStatus) {
 				    var jsonInfo = JSON.parse(data);
@@ -72,7 +83,7 @@
 			if(count > 0) {
 			    var html = '';
 			    for(var i in jsonInfo.keyword){
-				   html += "<a href=\"javascript:select('"+jsonInfo.keyword[i]+"')\">"+jsonInfo.keyword[i]+"</a><br/>";
+				   html += "<a style='display:none;' href=\"javascript:select('"+jsonInfo.keyword[i]+"')\">"+jsonInfo.keyword[i]+"</a><br/>";
 			    }
 			    var listView = document.getElementById("suggestList");
 			    listView.innerHTML = html;
@@ -114,7 +125,17 @@
 	      	<c:choose>
 	      		<c:when test="${isLogOn == true  && member!= null}">
 	      			<li class = cell-r style="padding-right:10px"><a href="${contextPath}/mypage/Mypage1.do"><div id="board_head_wrap">
-																					<div class="member_img"><img onerror="this.src='${contextPath}/resources/image/noImage.jpg'" src="${contextPath}/mem_download.do?uid=${member.uid}&memFileName=${member.memFileName}" alt="사용자 사진"	/></div>
+																					<div class="member_img">
+																					<c:choose>
+																						<c:when test="${member.memFileName != null and member.kakaoImg == null}">
+																							<img onerror="this.src='${contextPath}/resources/image/noImage.jpg'" src="${contextPath}/mem_download.do?uid=${member.uid}&memFileName=${member.memFileName}" alt="사용자 사진"	/>
+																						</c:when>
+																						<c:otherwise>
+																							<img onerror="this.src='${contextPath}/resources/image/noImage.jpg'" src="${member.kakaoImg}" alt="사용자 사진"	/>
+																						</c:otherwise>
+																					</c:choose>
+																					
+																					</div>
 																					<div style="float:left;">${member.name}님&nbsp;&nbsp;</div>
 																				</div></a></li>
 	      			<li class = cell-r><a href="${contextPath}/cart/myCartList.do"><i class="far fa-heart" style="color: rgb(192, 57, 43);"></i>&nbsp;찜하기</a></li>
@@ -132,11 +153,12 @@
 	        <div id = "logo"><a href="${contextPath}/main.do"><img src="${contextPath}/resources/image/yolo-logo-w.png" alt="YOLO가자로고"></a></div>
 	        <div class="menu-bar row">
 		        <div id="search" class="cell">
-		            <form name="frmSearch" action="" >
+		            <form name="frmSearch" action="${contextPath}/searchWorld.do" >
 		              <input type="checkbox" id="toggleBtn">
 		              <label for="toggleBtn" class="toggleBtn">&nbsp;&nbsp; &nbsp;</label>
 					  <!--  <input type="submit" name="search" class="btn1"  value="검 색" > -->
 		              <input name="searchWord" id="toggleBtnOn" class="main_input" type="text"  onKeyUp="keywordSearch()" placeholder="지역, 숙소명" >
+		              <input type="submit" name="search" class="btn1"  value="검 색" style="display: none;">
 		            </form>
 	             </div>
 		         <div id="suggest" class="cell">
